@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Проверяем оплату... — НПД.Чек</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100dvh;
+    background: #0A0C18;
+    color: #E8EAFF;
+    font-family: 'Switzer', 'Helvetica Neue', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .wrap { padding: 2rem; max-width: 420px; }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 3px solid rgba(108,127,255,0.2);
+    border-top-color: #6C7FFF;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1.5rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  h1 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+  p  { font-size: 0.9rem; color: #7B7E9E; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="spinner"></div>
+  <h1>Проверяем статус оплаты...</h1>
+  <p>Пожалуйста, не закрывайте страницу</p>
+</div>
+<script>
+(async () => {
+  const params  = new URLSearchParams(window.location.search);
+  const session = params.get('session_id');
+  const token   = params.get('token');
+
+  if (!session) {
+    window.location.replace('/failed.html');
+    return;
+  }
+
+  // Опрашиваем статус сессии, даём ЮКасса время обработать webhook (до 15 сек)
+  const API = window.location.hostname === 'localhost'
+    ? 'http://localhost:8010/api'
+    : '/api';
+
+  let paid = false;
+  let attempts = 0;
+
+  while (attempts < 5) {
+    attempts++;
+    try {
+      const resp = await fetch(`${API}/session/${session}`);
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.paid) { paid = true; break; }
+      }
+    } catch (e) {}
+
+    if (attempts < 5) {
+      await new Promise(r => setTimeout(r, 3000)); // ждём 3 сек между попытками
+    }
+  }
+
+  if (paid && token) {
+    window.location.replace(`/report/${token}`);
+  } else if (paid) {
+    window.location.replace('/success.html');
+  } else {
+    window.location.replace('/failed.html');
+  }
+})();
+</script>
+</body>
+</html>
