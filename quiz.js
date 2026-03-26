@@ -247,21 +247,14 @@
               <div class="factor-body">
                 <div class="factor-question">${f.question_text}</div>
                 <div class="factor-answer">Ваш ответ: <em>${f.answer}</em></div>
-                <div class="factor-explanation">${f.explanation}</div>
+                ${f.risk_level !== 'green' ? '<div class="factor-explanation factor-explanation--locked">🔒 Подробный анализ и рекомендации — в полном отчёте</div>' : ''}
               </div>
             </div>`;
           }).join('')}
         </div>
       </div>
 
-      <!-- Recommendations preview -->
-      ${r.recommendations && r.recommendations.length > 0 ? `
-      <div class="result-recs">
-        <h4 class="result-section-title">Что стоит сделать</h4>
-        <ul class="result-recs-list">
-          ${r.recommendations.slice(0, 3).map(rec => `<li>${rec}</li>`).join('')}
-        </ul>
-      </div>` : ''}
+      <!-- Recommendations — только в платном отчёте -->
 
       <!-- CTA -->
       <div class="result-cta-block">
@@ -269,11 +262,21 @@
           <div class="result-cta-icon">📄</div>
           <div class="result-cta-text">
             <strong>Полный отчёт + документы</strong>
-            <span>PDF с детальным анализом, договор ГПХ и акт выполненных работ</span>
+            <span>Подробный анализ каждого фактора, рекомендации, договор ГПХ и акт</span>
           </div>
-          <button class="btn btn-primary" data-action="get-report">
-            Получить за 390 ₽
-          </button>
+          <div class="result-cta-form" id="cta-form">
+            <input
+              type="email"
+              id="cta-email"
+              class="result-cta-email"
+              placeholder="Ваш email для получения отчёта"
+              autocomplete="email"
+            />
+            <button class="btn btn-primary" data-action="get-report">
+              Получить за 390 ₽
+            </button>
+          </div>
+          <p class="result-cta-hint" id="cta-hint"></p>
         </div>
         <button class="quiz-restart" data-action="restart">
           ← Пройти заново
@@ -381,33 +384,58 @@
 
   async function downloadReport() {
     const btn = quizEl.querySelector('[data-action="get-report"]');
+    const emailInput = quizEl.querySelector('#cta-email');
+    const hint = quizEl.querySelector('#cta-hint');
+
+    // Валидация email
+    const email = emailInput ? emailInput.value.trim() : '';
+    if (!email || !email.includes('@')) {
+      if (hint) {
+        hint.textContent = 'Введите email — отчёт придёт на почту после оплаты';
+        hint.style.color = '#DC2626';
+      }
+      if (emailInput) emailInput.focus();
+      return;
+    }
+
     if (btn) {
-      btn.textContent = 'Генерируем PDF…';
+      btn.textContent = 'Создаём платёж…';
       btn.disabled = true;
     }
+    if (hint) { hint.textContent = ''; }
 
     try {
-      const resp = await fetch(`${API_BASE}/report/generate`, {
+      // 1. Сохраняем сессию
+      const sessionResp = await fetch(`${API_BASE}/session/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers: state.answers }),
+        body: JSON.stringify({ answers: state.answers, session_id: state.result?.session_id }),
       });
+      if (!sessionResp.ok) throw new Error('session');
+      const { session_id } = await sessionResp.json();
 
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const blob = await resp.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'selfcheck-report.pdf';
-      a.click();
-      URL.revokeObjectURL(url);
+      // 2. Создаём платёж
+      const payResp = await fetch(`${API_BASE}/payment/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id, email }),
+      });
+      if (!payResp.ok) throw new Error('payment');
+      const { payment_url } = await payResp.json();
+
+      // 3. Редирект на ЮКасса
+      window.location.href = payment_url;
+
     } catch (err) {
-      alert('Ошибка генерации отчёта. Попробуйте ещё раз.');
-    }
-
-    if (btn) {
-      btn.textContent = 'Получить за 390 ₽';
-      btn.disabled = false;
+      console.error('Payment error:', err);
+      if (hint) {
+        hint.textContent = 'Ошибка создания платежа. Попробуйте ещё раз.';
+        hint.style.color = '#DC2626';
+      }
+      if (btn) {
+        btn.textContent = 'Получить за 390 ₽';
+        btn.disabled = false;
+      }
     }
   }
 

@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SelfCheck — Аудит рисков для самозанятых</title>
+<title>НПД.Чек — Аудит рисков для самозанятых</title>
 <meta name="description" content="Проверьте, соответствует ли ваша деятельность критериям самозанятости. Бесплатный опросник — 10 вопросов, результат за 2 минуты.">
-<meta property="og:title" content="SelfCheck — Аудит рисков для самозанятых">
+<meta property="og:title" content="НПД.Чек — Аудит рисков для самозанятых">
 <meta property="og:description" content="Проверьте свои риски как самозанятого. Бесплатный опросник, PDF-отчёт и документы для безопасной работы.">
 <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630' viewBox='0 0 1200 630'%3E%3Crect width='1200' height='630' fill='%233B4ECC'/%3E%3Crect x='40' y='40' width='1120' height='550' rx='24' fill='%23ffffff' fill-opacity='0.08'/%3E%3Cpath d='M200 200L160 220V260C160 290 178 315 200 320C222 315 240 290 240 260V220L200 200Z' fill='none' stroke='white' stroke-width='4' opacity='0.6'/%3E%3Cpath d='M185 255L195 265L215 245' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ctext x='280' y='270' font-family='Georgia,serif' font-size='72' fill='white'%3ESelfCheck%3C/text%3E%3Ctext x='280' y='320' font-family='Helvetica,sans-serif' font-size='28' fill='white' opacity='0.7'%3E%D0%90%D1%83%D0%B4%D0%B8%D1%82 %D1%80%D0%B8%D1%81%D0%BA%D0%BE%D0%B2 %D0%B4%D0%BB%D1%8F %D1%81%D0%B0%D0%BC%D0%BE%D0%B7%D0%B0%D0%BD%D1%8F%D1%82%D1%8B%D1%85%3C/text%3E%3Crect x='280' y='370' width='280' height='56' rx='12' fill='white'/%3E%3Ctext x='340' y='405' font-family='Helvetica,sans-serif' font-size='20' font-weight='bold' fill='%233B4ECC'%3E%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%B8%D1%82%D1%8C %D0%B1%D0%B5%D1%81%D0%BF%D0%BB%D0%B0%D1%82%D0%BD%D0%BE%3C/text%3E%3Ccircle cx='900' cy='300' r='120' fill='none' stroke='white' stroke-width='3' opacity='0.15'/%3E%3Ccircle cx='900' cy='300' r='80' fill='none' stroke='white' stroke-width='3' opacity='0.25'/%3E%3Ccircle cx='900' cy='300' r='40' fill='white' fill-opacity='0.1'/%3E%3Ctext x='870' y='310' font-family='Georgia,serif' font-size='32' fill='white'%3E10%3C/text%3E%3Ctext x='820' y='350' font-family='Helvetica,sans-serif' font-size='14' fill='white' opacity='0.6'%3E%D0%B2%D0%BE%D0%BF%D1%80%D0%BE%D1%81%D0%BE%D0%B2%3C/text%3E%3Ctext x='160' y='560' font-family='Helvetica,sans-serif' font-size='20' fill='white' opacity='0.4'%3Enpd-check.ru%3C/text%3E%3C/svg%3E">
 <meta property="og:url" content="https://npd-check.ru">
@@ -2154,6 +2154,49 @@ a, button, [role="button"] {
     padding: var(--space-5);
   }
 }
+/* CTA email form */
+.result-cta-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  margin-top: var(--space-3);
+}
+
+.result-cta-email {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: border-color var(--transition);
+  outline: none;
+}
+
+.result-cta-email:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(59, 78, 204, 0.08);
+}
+
+.result-cta-email::placeholder { color: var(--color-text-faint); }
+
+.result-cta-hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-2);
+  min-height: 18px;
+}
+
+/* Locked explanation in free result */
+.factor-explanation--locked {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  font-style: italic;
+  margin-top: var(--space-1);
+}
+
 </style>
 </head>
 <body>
@@ -2175,7 +2218,7 @@ a, button, [role="button"] {
           <path d="M12 16.5L14.5 19L20 13.5"
                 stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span class="logo-text">Self<span>Check</span></span>
+        <span class="logo-text">НПД<span>.Чек</span></span>
       </a>
 
       <div class="header-actions">
@@ -2751,7 +2794,7 @@ a, button, [role="button"] {
                 fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
           <path d="M12 16.5L14.5 19L20 13.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span class="footer-copy">© 2026 npd-check.ru · SelfCheck</span>
+        <span class="footer-copy">© 2026 npd-check.ru · НПД.Чек</span>
       </div>
 
       <div class="footer-links">
@@ -2868,7 +2911,7 @@ a, button, [role="button"] {
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "SelfCheck — Аудит рисков для самозанятых",
+  "name": "НПД.Чек — Аудит рисков для самозанятых",
   "description": "Онлайн-сервис проверки рисков для самозанятых в России. Бесплатный опросник, оценка рисков, PDF-отчёт и документы.",
   "url": "https://npd-check.ru",
   "applicationCategory": "BusinessApplication",
