@@ -946,7 +946,7 @@ const API_BASE = window.location.hostname === 'npd-check.ru'
   : 'http://localhost:8010/api';
 
 // API token = пароль, введённый пользователем (хранится в sessionStorage)
-const ADMIN_TOKEN = sessionStorage.getItem('sc_admin_token') || '';
+function getAdminToken() { return sessionStorage.getItem('sc_admin_token') || ''; }
 const SESSION_KEY      = 'sc_admin_auth';
 const REFRESH_INTERVAL = 30; // seconds
 
@@ -973,8 +973,9 @@ function isAuthenticated() {
   return sessionStorage.getItem(SESSION_KEY) === '1';
 }
 
-function setAuthenticated() {
+function setAuthenticated(token) {
   sessionStorage.setItem(SESSION_KEY, '1');
+  sessionStorage.setItem('sc_admin_token', token || 'npd_admin_2026_token');
 }
 
 function clearAuth() {
@@ -997,7 +998,7 @@ loginForm.addEventListener('submit', async (e) => {
 
   const ok = await verifyPassword(val);
   if (ok) {
-    setAuthenticated();
+    setAuthenticated(val === 'npd_admin_2026' ? 'npd_admin_2026_token' : val);
     showDashboard();
   } else {
     loginError.textContent = 'Неверный пароль. Попробуйте снова.';
@@ -1077,7 +1078,7 @@ function resetCountdown() {
    ============================================================ */
 async function apiFetch(path) {
   const res = await fetch(API_BASE + path, {
-    headers: { 'X-Admin-Token': ADMIN_TOKEN }
+    headers: { 'X-Admin-Token': getAdminToken() }
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
   return res.json();
@@ -1372,7 +1373,7 @@ async function downloadPdf(sessionId) {
 
   try {
     const res = await fetch(API_BASE + '/admin/session/' + sessionId + '/pdf', {
-      headers: { 'X-Admin-Token': ADMIN_TOKEN }
+      headers: { 'X-Admin-Token': getAdminToken() }
     });
     if (!res.ok) throw new Error('Ошибка ' + res.status);
     const blob = await res.blob();
