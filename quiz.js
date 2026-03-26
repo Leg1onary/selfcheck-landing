@@ -265,6 +265,13 @@
             <span>Подробный анализ каждого фактора, рекомендации, договор ГПХ и акт</span>
           </div>
           <div class="result-cta-form" id="cta-form">
+            <input
+              type="email"
+              id="cta-email"
+              class="result-cta-email"
+              placeholder="Ваш email для получения отчёта"
+              autocomplete="email"
+            />
             <button class="btn btn-primary" data-action="get-report">
               Получить за 390 ₽
             </button>
