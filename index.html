@@ -102,9 +102,9 @@
   --font-body: 'Switzer', 'Helvetica Neue', sans-serif;
 
   /* Content widths */
-  --content-narrow: 600px;
-  --content-default: 1000px;
-  --content-wide: 1200px;
+  --content-narrow: 680px;
+  --content-default: 1120px;
+  --content-wide: 1360px;
 }
 
 [data-theme="dark"] {
@@ -237,7 +237,7 @@ a, button, [role="button"] {
   width: 100%;
   max-width: var(--content-default);
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: 0 clamp(var(--space-6), 4vw, var(--space-16));
 }
 
 .container--wide {
@@ -440,7 +440,7 @@ a, button, [role="button"] {
   position: relative;
   z-index: 1;
   text-align: center;
-  max-width: 840px;
+  max-width: 960px;
   margin: 0 auto;
 }
 
@@ -548,7 +548,7 @@ a, button, [role="button"] {
    RISK PREVIEW (визуализация результата)
    ============================================================ */
 .risk-preview {
-  padding: clamp(var(--space-12), 7vw, var(--space-20)) 0;
+  padding: clamp(var(--space-16), 8vw, var(--space-24)) 0;
 }
 
 .risk-preview-inner {
@@ -717,7 +717,7 @@ a, button, [role="button"] {
    HOW IT WORKS
    ============================================================ */
 .section {
-  padding: clamp(var(--space-12), 7vw, var(--space-20)) 0;
+  padding: clamp(var(--space-16), 8vw, var(--space-24)) 0;
 }
 
 .section-label {
@@ -814,7 +814,7 @@ a, button, [role="button"] {
    PRICING
    ============================================================ */
 .pricing-section {
-  padding: clamp(var(--space-12), 7vw, var(--space-20)) 0;
+  padding: clamp(var(--space-16), 8vw, var(--space-24)) 0;
 }
 
 .pricing-grid {
@@ -899,7 +899,7 @@ a, button, [role="button"] {
    RISKS SECTION
    ============================================================ */
 .risks-section {
-  padding: clamp(var(--space-12), 7vw, var(--space-20)) 0;
+  padding: clamp(var(--space-16), 8vw, var(--space-24)) 0;
   background: var(--color-surface-2);
   border-top: 1px solid var(--color-divider);
   border-bottom: 1px solid var(--color-divider);
@@ -951,11 +951,11 @@ a, button, [role="button"] {
    FAQ
    ============================================================ */
 .faq-section {
-  padding: clamp(var(--space-12), 7vw, var(--space-20)) 0;
+  padding: clamp(var(--space-16), 8vw, var(--space-24)) 0;
 }
 
 .faq-list {
-  max-width: 680px;
+  max-width: 800px;
   margin: var(--space-12) auto 0;
   display: flex;
   flex-direction: column;
@@ -1118,6 +1118,7 @@ a, button, [role="button"] {
   justify-content: space-between;
   gap: var(--space-6);
   flex-wrap: wrap;
+  padding: var(--space-4) 0;
 }
 
 .footer-brand {
@@ -1863,7 +1864,7 @@ a, button, [role="button"] {
    TESTIMONIALS SECTION
    ============================================================ */
 .testimonials-section {
-  padding: clamp(var(--space-12), 7vw, var(--space-20)) 0;
+  padding: clamp(var(--space-16), 8vw, var(--space-24)) 0;
 }
 
 .testimonials-grid {
@@ -2268,7 +2269,7 @@ a, button, [role="button"] {
      QUIZ SECTION — сразу после hero, без прокрутки
      ============================================================ -->
 <section class="quiz-section" id="check">
-  <div class="container" style="max-width: 640px;">
+  <div class="container container--narrow">
     <p class="quiz-section-hint">↓ Ответьте на 10 вопросов</p>
     <div class="quiz-container fade-up" id="quiz-root"></div>
   </div>
