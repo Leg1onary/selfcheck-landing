@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+
+<!-- Perplexity Computer Attribution — SEO Meta Tags -->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SelfCheck — Панель администратора</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Switzer:wght@300..700&display=swap" rel="stylesheet">
+
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<style>
+/* ============================================================
+   DESIGN TOKENS (скопированы из index.html)
+   ============================================================ */
+:root, [data-theme="light"] {
+  --color-bg:             #F8F9FB;
+  --color-surface:        #FFFFFF;
+  --color-surface-2:      #F3F5F9;
+  --color-surface-offset: #EDF0F5;
+  --color-border:         #DDE1EA;
+  --color-divider:        #E8EBF1;
+  --color-text:           #16192B;
+  --color-text-muted:     #616784;
+  --color-text-faint:     #A8ABBE;
+  --color-text-inverse:   #FFFFFF;
+  --color-primary:        #3B4ECC;
+  --color-primary-hover:  #2E3FA8;
+  --color-primary-active: #22308A;
+  --color-primary-light:  #EEF0FC;
+  --color-amber:          #D97706;
+  --color-amber-hover:    #B45309;
+  --color-amber-light:    #FEF3C7;
+  --color-success:        #16A34A;
+  --color-success-light:  #DCFCE7;
+  --color-warning:        #D97706;
+  --color-warning-light:  #FEF3C7;
+  --color-danger:         #DC2626;
+  --color-danger-light:   #FEE2E2;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+  --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-sm: 0 1px 3px rgba(22, 25, 43, 0.06), 0 1px 2px rgba(22, 25, 43, 0.04);
+  --shadow-md: 0 4px 16px rgba(22, 25, 43, 0.08), 0 2px 6px rgba(22, 25, 43, 0.05);
+  --shadow-lg: 0 12px 40px rgba(22, 25, 43, 0.12), 0 4px 12px rgba(22, 25, 43, 0.07);
+  --shadow-card: 0 2px 8px rgba(59, 78, 204, 0.06), 0 1px 3px rgba(22, 25, 43, 0.05);
+  --shadow-card-hover: 0 8px 24px rgba(59, 78, 204, 0.12), 0 3px 8px rgba(22, 25, 43, 0.07);
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+  --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+  --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+  --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Switzer', 'Helvetica Neue', sans-serif;
+  --content-narrow: 600px;
+  --content-default: 1000px;
+  --content-wide: 1280px;
+}
+
+[data-theme="dark"] {
+  --color-bg:             #0F1020;
+  --color-surface:        #161829;
+  --color-surface-2:      #1C1F33;
+  --color-surface-offset: #222540;
+  --color-border:         #2D3154;
+  --color-divider:        #252847;
+  --color-text:           #E2E5F5;
+  --color-text-muted:     #8E93B8;
+  --color-text-faint:     #555A7A;
+  --color-text-inverse:   #0F1020;
+  --color-primary:        #6B7FFF;
+  --color-primary-hover:  #8A99FF;
+  --color-primary-active: #A5B0FF;
+  --color-primary-light:  #1A1F3F;
+  --color-amber:          #FBBF24;
+  --color-amber-hover:    #FCD34D;
+  --color-amber-light:    #2A2210;
+  --color-success:        #4ADE80;
+  --color-success-light:  #0F2A1A;
+  --color-warning:        #FBBF24;
+  --color-warning-light:  #2A2210;
+  --color-danger:         #F87171;
+  --color-danger-light:   #2A1010;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.25);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.35);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.45);
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-card-hover: 0 8px 24px rgba(107,127,255,0.2);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background var(--transition), color var(--transition);
+}
+
+/* ============================================================
+   LOGIN SCREEN
+   ============================================================ */
+#login-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--space-6);
+  background: var(--color-bg);
+  background-image: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(107, 127, 255, 0.12) 0%, transparent 60%);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-10) var(--space-8);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.login-logo-mark {
+  width: 40px;
+  height: 40px;
+}
+
+.login-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.login-title {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.login-input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.login-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(107, 127, 255, 0.15);
+}
+
+.login-input.error {
+  border-color: var(--color-danger);
+}
+
+.login-btn {
+  width: 100%;
+  padding: var(--space-3) var(--space-6);
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  letter-spacing: 0.01em;
+}
+
+.login-btn:hover {
+  background: var(--color-primary-hover);
+  box-shadow: 0 4px 12px rgba(107, 127, 255, 0.35);
+}
+
+.login-btn:active { transform: translateY(1px); }
+
+.login-error {
+  font-size: var(--text-sm);
+  color: var(--color-danger);
+  text-align: center;
+  min-height: 1.2em;
+  transition: opacity var(--transition);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  15%       { transform: translateX(-8px); }
+  30%       { transform: translateX(8px); }
+  45%       { transform: translateX(-6px); }
+  60%       { transform: translateX(6px); }
+  75%       { transform: translateX(-4px); }
+  90%       { transform: translateX(4px); }
+}
+.shake { animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+#dashboard {
+  display: none;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+/* Header */
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 var(--space-8);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(12px);
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.header-logo-mark {
+  width: 32px;
+  height: 32px;
+}
+
+.header-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.header-badge {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 2px 8px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-full);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.header-user {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.header-refresh {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+.refresh-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-success);
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+
+.btn-logout {
+  padding: var(--space-2) var(--space-4);
+  background: transparent;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.btn-logout:hover {
+  background: var(--color-danger-light);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+/* Main content */
+.admin-main {
+  flex: 1;
+  padding: var(--space-8);
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.section-title {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-faint);
+  margin-bottom: var(--space-4);
+}
+
+/* KPI Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-5);
+}
+
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .admin-main { padding: var(--space-4); }
+  .admin-header { padding: 0 var(--space-4); }
+}
+
+.kpi-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  transition: box-shadow var(--transition), transform var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--kpi-accent, var(--color-primary));
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.kpi-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-bottom: var(--space-1);
+}
+
+.kpi-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.kpi-value {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  color: var(--color-text);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.kpi-sub {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  margin-top: var(--space-1);
+}
+
+/* Charts row */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-6);
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .charts-row { grid-template-columns: 1fr; }
+}
+
+.chart-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+}
+
+.chart-card-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.line-chart-wrap {
+  width: 100%;
+  height: 200px;
+  position: relative;
+}
+
+.line-chart-wrap svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Donut chart */
+.donut-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.donut-wrap {
+  position: relative;
+  width: 160px;
+  height: 160px;
+}
+
+.donut-wrap svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-center-val {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.donut-center-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  margin-top: 2px;
+}
+
+.donut-legend {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.donut-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-name {
+  flex: 1;
+  color: var(--color-text-muted);
+}
+
+.legend-pct {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* Sessions table */
+.table-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.table-header-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.table-count {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  background: var(--color-surface-2);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+thead th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-faint);
+  background: var(--color-surface-2);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--color-border);
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--color-divider);
+  transition: background var(--transition);
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--color-surface-2); }
+
+tbody td {
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.cell-date { color: var(--color-text-muted); font-size: var(--text-xs); }
+.cell-id   { font-family: 'Courier New', monospace; font-size: var(--text-xs); color: var(--color-text-faint); }
+.cell-email { color: var(--color-text-muted); max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+
+/* Risk badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.badge-green  { background: var(--color-success-light); color: var(--color-success); }
+.badge-yellow { background: var(--color-warning-light); color: var(--color-warning); }
+.badge-red    { background: var(--color-danger-light);  color: var(--color-danger); }
+.badge-paid   { background: var(--color-success-light); color: var(--color-success); }
+.badge-unpaid { background: var(--color-surface-offset); color: var(--color-text-faint); }
+
+/* Action buttons */
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px 10px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+.btn-action:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+.btn-action:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Loading skeleton */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--color-surface-2) 25%, var(--color-surface-offset) 50%, var(--color-surface-2) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* Empty state */
+.empty-state {
+  padding: var(--space-12) var(--space-8);
+  text-align: center;
+  color: var(--color-text-faint);
+  font-size: var(--text-sm);
+}
+
+/* Alert banner */
+.alert {
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  margin-bottom: var(--space-4);
+}
+.alert-warn { background: var(--color-warning-light); color: var(--color-warning); border: 1px solid rgba(251, 191, 36, 0.3); }
+.alert-error { background: var(--color-danger-light); color: var(--color-danger); border: 1px solid rgba(248, 113, 113, 0.3); }
+
+/* Footer */
+.admin-footer {
+  text-align: center;
+  padding: var(--space-6);
+  border-top: 1px solid var(--color-divider);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+.admin-footer a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+.admin-footer a:hover { text-decoration: underline; }
+
+/* Tooltip */
+[data-tip] {
+  position: relative;
+  cursor: default;
+}
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-text);
+  color: var(--color-bg);
+  font-size: 0.72rem;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+  z-index: 999;
+}
+[data-tip]:hover::after { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     LOGIN SCREEN
+     ============================================================ -->
+<div id="login-screen">
+  <div class="login-card">
+    <!-- Logo -->
+    <div class="login-logo">
+      <svg class="login-logo-mark" viewBox="0 0 40 40" fill="none" aria-label="SelfCheck">
+        <rect width="40" height="40" rx="10" fill="var(--color-primary)" opacity="0.12"/>
+        <path d="M20 7L10 12.5V22C10 28 14.5 33.5 20 35C25.5 33.5 30 28 30 22V12.5L20 7Z" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M15 21.5L18.5 25L25 18" stroke="var(--color-primary)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="login-logo-text">SelfCheck</span>
+    </div>
+
+    <div class="login-title">Панель администратора</div>
+
+    <form class="login-form" id="login-form" autocomplete="off">
+      <div class="input-wrap">
+        <input
+          class="login-input"
+          id="password-input"
+          type="password"
+          placeholder="Пароль"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+      <button type="submit" class="login-btn">Войти</button>
+      <div class="login-error" id="login-error">&nbsp;</div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================================
+     DASHBOARD
+     ============================================================ -->
+<div id="dashboard">
+
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="header-brand">
+      <svg class="header-logo-mark" viewBox="0 0 40 40" fill="none" aria-label="SelfCheck">
+        <rect width="40" height="40" rx="10" fill="var(--color-primary)" opacity="0.12"/>
+        <path d="M20 7L10 12.5V22C10 28 14.5 33.5 20 35C25.5 33.5 30 28 30 22V12.5L20 7Z" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M15 21.5L18.5 25L25 18" stroke="var(--color-primary)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="header-logo-text">SelfCheck</span>
+      <span class="header-badge">Admin</span>
+    </div>
+
+    <div class="header-right">
+      <div class="header-refresh">
+        <span class="refresh-dot"></span>
+        <span id="refresh-label">Обновление через <span id="refresh-countdown">30</span>с</span>
+      </div>
+      <span class="header-user">Администратор</span>
+      <button class="btn-logout" id="btn-logout">Выйти</button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="admin-main">
+    <div id="api-alert" style="display:none"></div>
+
+    <!-- KPI Cards -->
+    <section>
+      <div class="section-title">Ключевые показатели</div>
+      <div class="kpi-grid">
+        <div class="kpi-card" style="--kpi-accent: var(--color-primary)">
+          <div class="kpi-icon">📋</div>
+          <div class="kpi-label">Всего сессий</div>
+          <div class="kpi-value" id="kpi-sessions">—</div>
+          <div class="kpi-sub">Прошли опросник</div>
+        </div>
+        <div class="kpi-card" style="--kpi-accent: var(--color-success)">
+          <div class="kpi-icon">✅</div>
+          <div class="kpi-label">Оплачено</div>
+          <div class="kpi-value" id="kpi-paid">—</div>
+          <div class="kpi-sub">Купили отчёт</div>
+        </div>
+        <div class="kpi-card" style="--kpi-accent: var(--color-amber)">
+          <div class="kpi-icon">📈</div>
+          <div class="kpi-label">Конверсия</div>
+          <div class="kpi-value" id="kpi-conversion">—</div>
+          <div class="kpi-sub">Оплат от сессий</div>
+        </div>
+        <div class="kpi-card" style="--kpi-accent: #8B5CF6">
+          <div class="kpi-icon">💰</div>
+          <div class="kpi-label">Выручка</div>
+          <div class="kpi-value" id="kpi-revenue">—</div>
+          <div class="kpi-sub">Сумма в рублях</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Charts -->
+    <section>
+      <div class="section-title">Аналитика</div>
+      <div class="charts-row">
+        <!-- Line chart: sessions by day -->
+        <div class="chart-card">
+          <div class="chart-card-title">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><polyline points="1,14 5,8 9,10 15,3" stroke="var(--color-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Сессии по дням (14 дней)
+          </div>
+          <div class="line-chart-wrap" id="line-chart-wrap">
+            <svg id="line-chart" viewBox="0 0 600 180" preserveAspectRatio="none">
+              <text x="300" y="100" text-anchor="middle" fill="var(--color-text-faint)" font-size="14">Загрузка...</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Donut chart: risk distribution -->
+        <div class="donut-card">
+          <div class="chart-card-title">Распределение рисков</div>
+          <div class="donut-wrap">
+            <svg id="donut-svg" viewBox="0 0 160 160">
+              <!-- filled by JS -->
+              <circle cx="80" cy="80" r="60" fill="none" stroke="var(--color-surface-2)" stroke-width="22"/>
+            </svg>
+            <div class="donut-center">
+              <div class="donut-center-val" id="donut-total">—</div>
+              <div class="donut-center-label">сессий</div>
+            </div>
+          </div>
+          <div class="donut-legend" id="donut-legend">
+            <div class="donut-legend-item">
+              <span class="legend-dot" style="background:#4ADE80"></span>
+              <span class="legend-name">Зелёный</span>
+              <span class="legend-pct" id="leg-green">—%</span>
+            </div>
+            <div class="donut-legend-item">
+              <span class="legend-dot" style="background:#FBBF24"></span>
+              <span class="legend-name">Жёлтый</span>
+              <span class="legend-pct" id="leg-yellow">—%</span>
+            </div>
+            <div class="donut-legend-item">
+              <span class="legend-dot" style="background:#F87171"></span>
+              <span class="legend-name">Красный</span>
+              <span class="legend-pct" id="leg-red">—%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sessions table -->
+    <section>
+      <div class="section-title">Последние сессии</div>
+      <div class="table-card">
+        <div class="table-header">
+          <span class="table-header-title">Сессии пользователей</span>
+          <span class="table-count" id="sessions-count">—</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Session ID</th>
+                <th>Риск</th>
+                <th>Email</th>
+                <th>Оплата</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="sessions-tbody">
+              <tr><td colspan="6" class="empty-state">Загрузка сессий...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="admin-footer">
+    npd-check.ru &mdash; SelfCheck Admin &mdash; &copy; 2026 &nbsp;|&nbsp;
+    <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const API_BASE = window.location.hostname === 'npd-check.ru'
+  ? '/api'
+  : 'http://localhost:8010/api';
+
+const ADMIN_TOKEN      = 'npd_admin_2026_token';
+const SESSION_KEY      = 'sc_admin_auth';
+const REFRESH_INTERVAL = 30; // seconds
+
+// SHA-256 of "npd_admin_2026" (precomputed + verified)
+const PASSWORD_HASH = 'd21a1cf616abaa11f57280dcac1b8b1e9cd55aa9c34a765080fad801f86e4115';
+
+/* ============================================================
+   AUTH — SHA-256 via WebCrypto
+   ============================================================ */
+async function sha256hex(str) {
+  const buf  = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+async function verifyPassword(input) {
+  const h = await sha256hex(input);
+  return h === PASSWORD_HASH;
+}
+
+function isAuthenticated() {
+  return sessionStorage.getItem(SESSION_KEY) === '1';
+}
+
+function setAuthenticated() {
+  sessionStorage.setItem(SESSION_KEY, '1');
+}
+
+function clearAuth() {
+  sessionStorage.removeItem(SESSION_KEY);
+}
+
+/* ============================================================
+   LOGIN
+   ============================================================ */
+const loginScreen  = document.getElementById('login-screen');
+const dashboard    = document.getElementById('dashboard');
+const loginForm    = document.getElementById('login-form');
+const passInput    = document.getElementById('password-input');
+const loginError   = document.getElementById('login-error');
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const val = passInput.value.trim();
+  if (!val) return;
+
+  const ok = await verifyPassword(val);
+  if (ok) {
+    setAuthenticated();
+    showDashboard();
+  } else {
+    loginError.textContent = 'Неверный пароль. Попробуйте снова.';
+    passInput.classList.add('error', 'shake');
+    passInput.addEventListener('animationend', () => {
+      passInput.classList.remove('shake');
+    }, { once: true });
+    passInput.value = '';
+    passInput.focus();
+  }
+});
+
+passInput.addEventListener('input', () => {
+  passInput.classList.remove('error');
+  loginError.textContent = '\u00A0';
+});
+
+/* ============================================================
+   ROUTING
+   ============================================================ */
+function init() {
+  if (isAuthenticated()) {
+    showDashboard();
+  } else {
+    loginScreen.style.display = 'flex';
+    dashboard.style.display   = 'none';
+    passInput.focus();
+  }
+}
+
+function showDashboard() {
+  loginScreen.style.display = 'none';
+  dashboard.style.display   = 'flex';
+  loadAll();
+  startAutoRefresh();
+}
+
+document.getElementById('btn-logout').addEventListener('click', () => {
+  clearAuth();
+  clearInterval(refreshTimer);
+  loginScreen.style.display = 'flex';
+  dashboard.style.display   = 'none';
+  passInput.value = '';
+  loginError.textContent = '\u00A0';
+  passInput.focus();
+});
+
+/* ============================================================
+   AUTO REFRESH
+   ============================================================ */
+let refreshTimer = null;
+let countdown    = REFRESH_INTERVAL;
+const countdownEl = document.getElementById('refresh-countdown');
+
+function startAutoRefresh() {
+  countdown = REFRESH_INTERVAL;
+  countdownEl.textContent = countdown;
+  clearInterval(refreshTimer);
+
+  refreshTimer = setInterval(() => {
+    countdown--;
+    countdownEl.textContent = countdown;
+    if (countdown <= 0) {
+      loadAll();
+      countdown = REFRESH_INTERVAL;
+    }
+  }, 1000);
+}
+
+function resetCountdown() {
+  countdown = REFRESH_INTERVAL;
+  countdownEl.textContent = countdown;
+}
+
+/* ============================================================
+   API
+   ============================================================ */
+async function apiFetch(path) {
+  const res = await fetch(API_BASE + path, {
+    headers: { 'X-Admin-Token': ADMIN_TOKEN }
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+  return res.json();
+}
+
+function showAlert(msg, type = 'warn') {
+  const el = document.getElementById('api-alert');
+  el.className = `alert alert-${type}`;
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function hideAlert() {
+  document.getElementById('api-alert').style.display = 'none';
+}
+
+/* ============================================================
+   MOCK DATA (для работы без бэкенда)
+   ============================================================ */
+function getMockStats() {
+  const now    = new Date();
+  const byDay  = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    byDay.push({
+      date:  d.toISOString().slice(0, 10),
+      count: Math.floor(Math.random() * 12) + 1
+    });
+  }
+  return {
+    total_sessions:   147,
+    paid_sessions:    38,
+    conversion_rate:  25.9,
+    total_revenue:    75240,
+    sessions_by_day:  byDay,
+    risk_distribution: { green: 32, yellow: 44, red: 24 }
+  };
+}
+
+function getMockSessions() {
+  const risks   = ['green', 'yellow', 'red'];
+  const emails  = ['ivan@example.com', 'maria@yandex.ru', null, 'user@mail.ru', null, 'sergey@gmail.com'];
+  const result  = [];
+  for (let i = 0; i < 20; i++) {
+    const paid = Math.random() > 0.72;
+    const id   = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2, 34);
+    const d    = new Date(Date.now() - Math.random() * 14 * 86400000);
+    result.push({
+      id:           id,
+      created_at:   d.toISOString(),
+      overall_risk: risks[Math.floor(Math.random() * risks.length)],
+      email:        emails[Math.floor(Math.random() * emails.length)],
+      paid:         paid,
+      paid_at:      paid ? new Date(d.getTime() + 3600000).toISOString() : null
+    });
+  }
+  return result.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+}
+
+/* ============================================================
+   LOAD DATA
+   ============================================================ */
+async function loadAll() {
+  resetCountdown();
+  await Promise.all([loadStats(), loadSessions()]);
+}
+
+async function loadStats() {
+  let stats;
+  try {
+    stats = await apiFetch('/admin/stats');
+    hideAlert();
+  } catch (err) {
+    // Fall back to mock data
+    stats = getMockStats();
+    showAlert('⚠ API недоступен — показаны тестовые данные (' + err.message + ')', 'warn');
+  }
+  renderStats(stats);
+}
+
+async function loadSessions() {
+  let sessions;
+  try {
+    sessions = await apiFetch('/admin/sessions?limit=50&offset=0');
+  } catch (err) {
+    sessions = getMockSessions();
+  }
+  renderSessions(sessions);
+}
+
+/* ============================================================
+   RENDER STATS
+   ============================================================ */
+function renderStats(data) {
+  document.getElementById('kpi-sessions').textContent    = (data.total_sessions ?? 0).toLocaleString('ru-RU');
+  document.getElementById('kpi-paid').textContent        = (data.paid_sessions ?? 0).toLocaleString('ru-RU');
+  document.getElementById('kpi-conversion').textContent  = (data.conversion_rate ?? 0).toFixed(1) + '%';
+  document.getElementById('kpi-revenue').textContent     = formatRub(data.total_revenue ?? 0);
+  document.getElementById('donut-total').textContent     = (data.total_sessions ?? 0).toLocaleString('ru-RU');
+
+  renderLineChart(data.sessions_by_day || []);
+  renderDonut(data.risk_distribution || { green: 0, yellow: 0, red: 0 });
+}
+
+function formatRub(n) {
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'М ₽';
+  if (n >= 1000)    return (n / 1000).toFixed(0) + 'К ₽';
+  return n.toLocaleString('ru-RU') + ' ₽';
+}
+
+/* ============================================================
+   LINE CHART (pure SVG)
+   ============================================================ */
+function renderLineChart(days) {
+  const svg    = document.getElementById('line-chart');
+  const W      = 600, H = 180;
+  const PAD    = { top: 16, right: 20, bottom: 36, left: 40 };
+  const plotW  = W - PAD.left - PAD.right;
+  const plotH  = H - PAD.top  - PAD.bottom;
+
+  if (!days.length) {
+    svg.innerHTML = `<text x="${W/2}" y="${H/2}" text-anchor="middle" fill="var(--color-text-faint)" font-size="13">Нет данных</text>`;
+    return;
+  }
+
+  const counts = days.map(d => d.count);
+  const maxVal = Math.max(...counts, 1);
+  const step   = plotW / (days.length - 1 || 1);
+
+  const points = days.map((d, i) => ({
+    x: PAD.left + i * step,
+    y: PAD.top  + plotH - (d.count / maxVal) * plotH,
+    d: d
+  }));
+
+  // Build path strings
+  const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+  const fillPath = linePath
+    + ` L${points[points.length - 1].x.toFixed(1)},${(PAD.top + plotH).toFixed(1)}`
+    + ` L${points[0].x.toFixed(1)},${(PAD.top + plotH).toFixed(1)} Z`;
+
+  // Grid lines
+  let gridLines = '';
+  const gridCount = 4;
+  for (let i = 0; i <= gridCount; i++) {
+    const y = PAD.top + (plotH / gridCount) * i;
+    const val = Math.round(maxVal * (1 - i / gridCount));
+    gridLines += `<line x1="${PAD.left}" y1="${y.toFixed(1)}" x2="${W - PAD.right}" y2="${y.toFixed(1)}" stroke="var(--color-border)" stroke-width="1" stroke-dasharray="4,4"/>`;
+    gridLines += `<text x="${PAD.left - 6}" y="${(y + 4).toFixed(1)}" text-anchor="end" fill="var(--color-text-faint)" font-size="10">${val}</text>`;
+  }
+
+  // X-axis labels (show every 2nd or 3rd)
+  let xLabels = '';
+  const skip = days.length > 10 ? 3 : 2;
+  days.forEach((d, i) => {
+    if (i % skip !== 0 && i !== days.length - 1) return;
+    const x = PAD.left + i * step;
+    const label = d.date.slice(5); // MM-DD
+    xLabels += `<text x="${x.toFixed(1)}" y="${(PAD.top + plotH + 18).toFixed(1)}" text-anchor="middle" fill="var(--color-text-faint)" font-size="10">${label}</text>`;
+  });
+
+  // Circles on data points
+  let circles = '';
+  points.forEach(p => {
+    circles += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5" fill="var(--color-primary)" stroke="var(--color-surface)" stroke-width="2">
+      <title>${p.d.date}: ${p.d.count} сессий</title>
+    </circle>`;
+  });
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="lg-fill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="var(--color-primary)" stop-opacity="0.18"/>
+        <stop offset="100%" stop-color="var(--color-primary)" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    ${gridLines}
+    <path d="${fillPath}" fill="url(#lg-fill)"/>
+    <path d="${linePath}" fill="none" stroke="var(--color-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    ${circles}
+    ${xLabels}
+  `;
+}
+
+/* ============================================================
+   DONUT CHART (pure SVG)
+   ============================================================ */
+function renderDonut(dist) {
+  const green  = dist.green  ?? 0;
+  const yellow = dist.yellow ?? 0;
+  const red    = dist.red    ?? 0;
+  const total  = green + yellow + red || 1;
+
+  document.getElementById('leg-green').textContent  = green.toFixed(0)  + '%';
+  document.getElementById('leg-yellow').textContent = yellow.toFixed(0) + '%';
+  document.getElementById('leg-red').textContent    = red.toFixed(0)    + '%';
+
+  const R = 60, cx = 80, cy = 80;
+  const circ = 2 * Math.PI * R;
+
+  const segments = [
+    { pct: green  / 100, color: '#4ADE80' },
+    { pct: yellow / 100, color: '#FBBF24' },
+    { pct: red    / 100, color: '#F87171' },
+  ];
+
+  let offset = 0;
+  let paths  = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--color-surface-2)" stroke-width="22"/>`;
+
+  segments.forEach(seg => {
+    const dash = seg.pct * circ;
+    const gap  = circ - dash;
+    if (dash < 0.5) { offset += dash; return; }
+    paths += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none"
+      stroke="${seg.color}" stroke-width="22"
+      stroke-dasharray="${dash.toFixed(2)} ${gap.toFixed(2)}"
+      stroke-dashoffset="${(-offset).toFixed(2)}"
+      stroke-linecap="butt"/>`;
+    offset += dash;
+  });
+
+  document.getElementById('donut-svg').innerHTML = paths;
+}
+
+/* ============================================================
+   RENDER SESSIONS TABLE
+   ============================================================ */
+function renderSessions(sessions) {
+  const tbody = document.getElementById('sessions-tbody');
+  const count = document.getElementById('sessions-count');
+
+  count.textContent = sessions.length + ' сессий';
+
+  if (!sessions.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Сессий пока нет</td></tr>';
+    return;
+  }
+
+  const riskLabel = { green: 'Низкий', yellow: 'Средний', red: 'Высокий' };
+  const riskClass = { green: 'badge-green', yellow: 'badge-yellow', red: 'badge-red' };
+
+  tbody.innerHTML = sessions.map(s => {
+    const date     = formatDate(s.created_at);
+    const sid      = (s.id || '').slice(0, 8);
+    const risk     = s.overall_risk || 'unknown';
+    const email    = s.email ? escHtml(s.email) : '<span style="color:var(--color-text-faint)">—</span>';
+    const paidBadge = s.paid
+      ? '<span class="badge badge-paid">✓ Оплачено</span>'
+      : '<span class="badge badge-unpaid">Не оплачено</span>';
+    const pdfBtn   = s.paid
+      ? `<button class="btn-action" onclick="downloadPdf('${escAttr(s.id)}')">PDF</button>`
+      : `<button class="btn-action" disabled title="Оплата не произведена">PDF</button>`;
+    const rBadge   = risk !== 'unknown'
+      ? `<span class="badge ${riskClass[risk] || ''}">${riskLabel[risk] || risk}</span>`
+      : '<span style="color:var(--color-text-faint)">—</span>';
+
+    return `<tr>
+      <td class="cell-date" data-tip="${escAttr(s.created_at)}">${date}</td>
+      <td class="cell-id">${escHtml(sid)}</td>
+      <td>${rBadge}</td>
+      <td class="cell-email">${email}</td>
+      <td>${paidBadge}</td>
+      <td>${pdfBtn}</td>
+    </tr>`;
+  }).join('');
+}
+
+function formatDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: '2-digit' })
+    + ' ' + d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+}
+
+function escHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function escAttr(str) {
+  return String(str).replace(/"/g, '&quot;');
+}
+
+/* ============================================================
+   PDF DOWNLOAD
+   ============================================================ */
+async function downloadPdf(sessionId) {
+  const btn = event.target;
+  const origText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  try {
+    const res = await fetch(API_BASE + '/admin/session/' + sessionId + '/pdf', {
+      headers: { 'X-Admin-Token': ADMIN_TOKEN }
+    });
+    if (!res.ok) throw new Error('Ошибка ' + res.status);
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'selfcheck_report_' + sessionId.slice(0, 8) + '.pdf';
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    alert('Не удалось скачать PDF: ' + err.message);
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = origText;
+  }
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+init();
+</script>
+</body>
+</html>
