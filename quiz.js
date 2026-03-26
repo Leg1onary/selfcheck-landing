@@ -353,10 +353,18 @@
       });
     });
 
-    // Get report
+    // Get report → payment flow
     const reportBtn = quizEl.querySelector('[data-action="get-report"]');
     if (reportBtn) {
-      reportBtn.addEventListener('click', () => downloadReport());
+      reportBtn.addEventListener('click', () => startPayment());
+    }
+
+    // Email input — enter key triggers payment
+    const emailInput = quizEl.querySelector('#cta-email');
+    if (emailInput) {
+      emailInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') startPayment();
+      });
     }
   }
 
@@ -382,55 +390,71 @@
     render();
   }
 
-  async function downloadReport() {
-    const btn = quizEl.querySelector('[data-action="get-report"]');
+  async function startPayment() {
     const emailInput = quizEl.querySelector('#cta-email');
+    const btn = quizEl.querySelector('[data-action="get-report"]');
     const hint = quizEl.querySelector('#cta-hint');
 
     // Валидация email
     const email = emailInput ? emailInput.value.trim() : '';
-    if (!email || !email.includes('@')) {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       if (hint) {
-        hint.textContent = 'Введите email — отчёт придёт на почту после оплаты';
         hint.style.color = '#DC2626';
+        hint.textContent = 'Введите корректный email для получения отчёта';
       }
       if (emailInput) emailInput.focus();
       return;
     }
 
+    // Блокируем кнопку
     if (btn) {
-      btn.textContent = 'Создаём платёж…';
+      btn.textContent = 'Создаём заказ…';
       btn.disabled = true;
     }
-    if (hint) { hint.textContent = ''; }
+    if (hint) {
+      hint.style.color = '#616784';
+      hint.textContent = 'Подключаемся к платёжной системе…';
+    }
 
     try {
-      // 1. Сохраняем сессию
+      // 1. Создаём сессию
       const sessionResp = await fetch(`${API_BASE}/session/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers: state.answers, session_id: state.result?.session_id }),
+        body: JSON.stringify({ answers: state.answers }),
       });
-      if (!sessionResp.ok) throw new Error('session');
+      if (!sessionResp.ok) throw new Error(`Ошибка создания сессии: HTTP ${sessionResp.status}`);
       const { session_id } = await sessionResp.json();
 
       // 2. Создаём платёж
-      const payResp = await fetch(`${API_BASE}/payment/create`, {
+      const paymentResp = await fetch(`${API_BASE}/payment/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ session_id, email }),
       });
-      if (!payResp.ok) throw new Error('payment');
-      const { payment_url } = await payResp.json();
+      if (!paymentResp.ok) {
+        const errData = await paymentResp.json().catch(() => ({}));
+        throw new Error(errData.detail || `Ошибка платежа: HTTP ${paymentResp.status}`);
+      }
+      const paymentData = await paymentResp.json();
 
-      // 3. Редирект на ЮКасса
-      window.location.href = payment_url;
+      // 3. Если уже оплачено — редиректим на отчёт
+      if (paymentData.already_paid && paymentData.report_token) {
+        window.location.href = `/report/${paymentData.report_token}`;
+        return;
+      }
 
+      // 4. Редиректим на страницу оплаты ЮКасса
+      if (paymentData.payment_url) {
+        window.location.href = paymentData.payment_url;
+      } else {
+        throw new Error('Не получена ссылка на оплату');
+      }
     } catch (err) {
-      console.error('Payment error:', err);
+      console.error('SelfCheck payment error:', err);
       if (hint) {
-        hint.textContent = 'Ошибка создания платежа. Попробуйте ещё раз.';
         hint.style.color = '#DC2626';
+        hint.textContent = err.message || 'Ошибка. Попробуйте ещё раз.';
       }
       if (btn) {
         btn.textContent = 'Получить за 390 ₽';
