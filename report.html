@@ -839,6 +839,9 @@ function escHtml(str) {
 }
 
 function getToken() {
+  // Берём токен из /report/{token} или из ?token={token}
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('token')) return params.get('token');
   const parts = window.location.pathname.split('/');
   return parts[parts.length - 1] || '';
 }

@@ -265,18 +265,11 @@
             <span>Подробный анализ каждого фактора, рекомендации, договор ГПХ и акт</span>
           </div>
           <div class="result-cta-form" id="cta-form">
-            <input
-              type="email"
-              id="cta-email"
-              class="result-cta-email"
-              placeholder="Email — пришлём файлы после оплаты"
-              autocomplete="email"
-            />
             <button class="btn btn-primary" data-action="get-report">
               Получить за 390 ₽
             </button>
           </div>
-          <p class="result-cta-hint" id="cta-hint">Вы получите доступ к странице с разбором и письмо с файлами</p>
+          <p class="result-cta-hint" id="cta-hint"></p>
         </div>
         <button class="quiz-restart" data-action="restart">
           ← Пройти заново
