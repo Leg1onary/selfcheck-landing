@@ -933,28 +933,6 @@ a, button, [role="button"] {
 /* ============================================================
    COOKIE
    ============================================================ */
-.cookie-banner {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 999;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-mid);
-  border-radius: var(--radius-xl);
-  padding: 16px 24px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
-  max-width: 580px;
-  width: calc(100% - 40px);
-  font-size: 0.875rem;
-  color: var(--text-muted);
-}
-.cookie-banner a { color: var(--accent); }
-.cookie-actions { display: flex; gap: 8px; flex-shrink: 0; }
-
 /* ============================================================
    RESPONSIVE
    ============================================================ */
@@ -983,16 +961,7 @@ a, button, [role="button"] {
 </head>
 <body>
 
-<!-- ============================================================
-     COOKIE BANNER
-     ============================================================ -->
-<div class="cookie-banner" id="cookie-banner" style="display:none;">
-  <span>Мы используем куки для аналитики. <a href="/privacy.html" target="_blank" rel="noopener">Подробнее</a></span>
-  <div class="cookie-actions">
-    <button class="btn btn-ghost" style="padding:8px 14px; font-size:0.8125rem;" onclick="cookieAction(false)">Отказаться</button>
-    <button class="btn btn-primary" style="padding:8px 16px; font-size:0.8125rem;" onclick="cookieAction(true)">Принять</button>
-  </div>
-</div>
+<!-- cookie banner moved to end of body -->
 
 <!-- ============================================================
      HEADER
