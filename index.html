@@ -1713,7 +1713,7 @@ function selectTier(tier){
 
 
 <!-- Yandex.Metrika + Cookie consent -->
-<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(13,16,33,0.97);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.08);color:#9BA3C4;padding:14px 20px;z-index:9999;font-size:0.8125rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(13,16,33,0.97);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.08);color:#9BA3C4;padding:14px 20px;z-index:9999;font-size:0.8125rem;align-items:center;gap:12px;flex-wrap:wrap;">
   <span style="flex:1;min-width:200px;">Мы используем cookie для аналитики (Яндекс.Метрика). <a href="/privacy.html" style="color:#6C7FFF;text-decoration:none;">Подробнее</a></span>
   <button onclick="cookieAccept()" style="background:linear-gradient(135deg,#6C7FFF,#8B5CF6);color:#fff;border:none;padding:8px 20px;border-radius:9999px;cursor:pointer;font-size:0.8125rem;font-weight:600;">Принять</button>
   <button onclick="cookieDeny()" style="background:transparent;color:#9BA3C4;border:1px solid rgba(255,255,255,0.15);padding:8px 16px;border-radius:9999px;cursor:pointer;font-size:0.8125rem;">Отказаться</button>
@@ -1739,7 +1739,10 @@ function cookieDeny(){
 (function(){
   var consent = localStorage.getItem('cookie_consent');
   if(!consent){
-    setTimeout(function(){ document.getElementById('cookie-banner').style.display='flex'; }, 1500);
+    setTimeout(function(){
+      var b = document.getElementById('cookie-banner');
+      if(b){ b.style.display='flex'; }
+    }, 1500);
   } else if(consent === 'yes'){
     initMetrika();
   }
