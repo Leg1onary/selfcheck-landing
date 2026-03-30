@@ -1,254 +1,322 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="ru">
 <head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Страница не найдена — НПД.Чек</title>
 <meta name="description" content="Такой страницы не существует. Вернитесь на главную npd-check.ru.">
-<meta name="robots" content="noindex">
+<meta name="robots" content="noindex,nofollow">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Switzer:wght@300..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
 <style>
-:root, [data-theme="light"] {
-  --color-bg: #F8F9FB; --color-surface: #FFFFFF; --color-surface-2: #F3F5F9;
-  --color-surface-offset: #EDF0F5; --color-border: #DDE1EA; --color-divider: #E8EBF1;
-  --color-text: #16192B; --color-text-muted: #616784; --color-text-faint: #A8ABBE;
-  --color-primary: #3B4ECC; --color-primary-hover: #2E3FA8; --color-primary-light: #EEF0FC;
-  --radius-md: 0.625rem; --radius-lg: 1rem; --radius-xl: 1.5rem; --radius-full: 9999px;
-  --transition: 180ms cubic-bezier(0.16,1,0.3,1);
-  --shadow-md: 0 4px 16px rgba(22,25,43,0.08);
-  --font-display: 'Instrument Serif', Georgia, serif;
-  --font-body: 'Switzer', 'Helvetica Neue', sans-serif;
-  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-  --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
-  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+:root {
+  --bg:            #0A0C18;
+  --bg-card:       #0F1224;
+  --bg-elevated:   #151930;
+  --border:        rgba(255,255,255,0.06);
+  --border-mid:    rgba(255,255,255,0.10);
+  --accent:        #6C7FFF;
+  --accent-2:      #8B5CF6;
+  --accent-glow:   rgba(108,127,255,0.20);
+  --accent-subtle: rgba(108,127,255,0.08);
+  --amber:         #F59E0B;
+  --green:         #10B981;
+  --red:           #EF4444;
+  --text:          #EDF0FF;
+  --text-muted:    #7B82A8;
+  --text-faint:    #4A5070;
+  --radius-md:     12px;
+  --radius-lg:     16px;
+  --radius-xl:     20px;
+  --radius-2xl:    28px;
+  --radius-full:   9999px;
+  --ease:          cubic-bezier(0.16, 1, 0.3, 1);
+  --transition:    200ms var(--ease);
+  --shadow-card:   0 1px 0 rgba(255,255,255,0.05) inset, 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-glow:   0 0 40px rgba(108,127,255,0.15);
+  --font-display:  'Instrument Serif', Georgia, serif;
+  --font-body:     'Plus Jakarta Sans', system-ui, sans-serif;
 }
-[data-theme="dark"] {
-  --color-bg: #0F1020; --color-surface: #161829; --color-surface-2: #1C1F33;
-  --color-surface-offset: #222540; --color-border: #2D3154; --color-divider: #252847;
-  --color-text: #E2E5F5; --color-text-muted: #8E93B8; --color-text-faint: #555A7A;
-  --color-primary: #6B7FFF; --color-primary-hover: #8A99FF; --color-primary-light: #1A1F3F;
-}
-@media (prefers-color-scheme: dark) { :root:not([data-theme]) {
-  --color-bg: #0F1020; --color-surface: #161829; --color-surface-2: #1C1F33;
-  --color-surface-offset: #222540; --color-border: #2D3154; --color-divider: #252847;
-  --color-text: #E2E5F5; --color-text-muted: #8E93B8; --color-text-faint: #555A7A;
-  --color-primary: #6B7FFF; --color-primary-hover: #8A99FF; --color-primary-light: #1A1F3F;
-}}
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-font-smoothing: antialiased; }
-body {
-  min-height: 100dvh; font-family: var(--font-body); font-size: var(--text-base);
-  line-height: 1.6; color: var(--color-text); background: var(--color-bg);
-  display: flex; flex-direction: column;
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
-a { color: var(--color-primary); text-decoration: none; transition: opacity var(--transition); }
-a:hover { opacity: 0.8; }
-button { cursor: pointer; background: none; border: none; font: inherit; }
+body {
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+img, svg { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; background: none; border: none; font: inherit; color: inherit; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.1; }
+a, button { transition: color var(--transition), background var(--transition), border-color var(--transition), box-shadow var(--transition), opacity var(--transition), transform var(--transition); }
 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+/* HEADER */
 .site-header {
   position: sticky; top: 0; z-index: 100;
-  background: color-mix(in srgb, var(--color-bg) 85%, transparent);
-  backdrop-filter: blur(16px); border-bottom: 1px solid var(--color-border);
+  background: rgba(10,12,24,0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition);
 }
+.site-header--scrolled { border-bottom-color: var(--border-mid); }
 .header-inner {
-  max-width: 1000px; margin: 0 auto; padding: 0 1.5rem;
-  height: 64px; display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 72px; gap: 24px; max-width: 1200px; margin: 0 auto;
+  padding: 0 clamp(24px, 5vw, 80px);
 }
-.logo { display: flex; align-items: center; gap: 0.75rem; color: var(--color-text); font-weight: 700; font-size: var(--text-sm); }
-.logo:hover { opacity: 0.85; }
-.logo span { color: var(--color-primary); }
-.theme-toggle {
-  width: 36px; height: 36px; border-radius: var(--radius-md);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--color-text-muted); transition: background var(--transition), color var(--transition);
-}
-.theme-toggle:hover { background: var(--color-surface-offset); color: var(--color-text); }
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); flex-shrink: 0; }
+.logo:hover { opacity: 0.8; }
+.logo-text { font-family: var(--font-body); font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+.logo-text span { color: var(--accent); }
 
+/* BUTTONS */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: 0.9375rem; font-weight: 600; line-height: 1; text-decoration: none;
+  border: 1.5px solid transparent; border-radius: var(--radius-full);
+  padding: 12px 28px; cursor: pointer; white-space: nowrap;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff; border-color: transparent;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(108,127,255,0.35), var(--shadow-glow); }
+.btn-outline { background: transparent; color: var(--accent); border-color: var(--accent); }
+.btn-outline:hover { background: var(--accent-subtle); transform: translateY(-1px); }
+
+/* MAIN */
 main {
   flex: 1; display: flex; align-items: center; justify-content: center;
   padding: 3rem 1.5rem;
-}
-.page-card {
-  max-width: 520px; width: 100%; text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Big 404 */
-.num-404 {
+/* Huge 404 background */
+.bg-404 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   font-family: var(--font-display);
-  font-size: clamp(6rem, 20vw, 10rem);
+  font-size: clamp(12rem, 30vw, 20rem);
   font-weight: 400;
   line-height: 1;
-  background: linear-gradient(135deg, var(--color-primary) 0%, #8B9FFF 100%);
+  color: var(--text);
+  opacity: 0.04;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* Ambient blob */
+.ambient-blob {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(108,127,255,0.06) 0%, transparent 70%);
+  filter: blur(80px);
+  top: 30%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.page-card {
+  max-width: 520px; width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Accent 404 number */
+.num-404 {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 18vw, 9rem);
+  font-weight: 400;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: 1.5rem;
-  animation: float 4s ease-in-out infinite;
   display: block;
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
 }
 
 .page-title {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
+  font-size: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
   font-weight: 400;
-  color: var(--color-text);
+  color: var(--text);
   margin-bottom: 1rem;
-  line-height: 1.2;
 }
 .page-subtitle {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
+  font-size: clamp(0.875rem, 0.85rem + 0.15vw, 1rem);
+  color: var(--text-muted);
   line-height: 1.7;
   margin-bottom: 2.5rem;
   max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: auto; margin-right: auto;
+}
+
+/* Blinking dots animation */
+.blink-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 2rem;
+}
+.blink-dots span {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.3;
+  animation: blink 1.4s infinite ease-in-out both;
+}
+.blink-dots span:nth-child(1) { animation-delay: 0s; }
+.blink-dots span:nth-child(2) { animation-delay: 0.2s; }
+.blink-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0.3; }
+  40% { opacity: 1; }
 }
 
 /* Quick links */
 .quick-links {
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column;
   gap: 0.75rem;
-  margin-bottom: 2rem;
 }
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-  font-size: var(--text-sm); font-weight: 600;
-  padding: 0.75rem 1.5rem; border-radius: var(--radius-lg);
-  border: 1.5px solid transparent;
-  cursor: pointer; text-decoration: none;
-  transition: all var(--transition);
-}
-.btn-primary { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
-.btn-primary:hover { background: var(--color-primary-hover); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(59,78,204,0.3); opacity: 1; }
-.btn-outline { background: transparent; color: var(--color-primary); border-color: var(--color-primary); }
-.btn-outline:hover { background: var(--color-primary-light); opacity: 1; }
 
-/* Sitemap hint */
-.sitemap {
-  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-}
-.sitemap a { color: var(--color-text-muted); }
-.sitemap a:hover { color: var(--color-text); opacity: 1; }
-.sitemap-sep { color: var(--color-border); }
-
+/* FOOTER */
 .site-footer {
-  background: var(--color-surface-2); border-top: 1px solid var(--color-divider); padding: 1.5rem;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 2rem 0; margin-top: auto;
 }
 .footer-inner {
-  max-width: 1000px; margin: 0 auto;
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 clamp(24px, 5vw, 80px);
   display: flex; align-items: center; justify-content: space-between;
-  gap: 1rem; flex-wrap: wrap;
+  gap: 1.5rem; flex-wrap: wrap;
 }
-.footer-copy { font-size: var(--text-xs); color: var(--color-text-faint); }
-.footer-links { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-.footer-link { font-size: var(--text-xs); color: var(--color-text-muted); }
-.footer-link:hover { color: var(--color-text); opacity: 1; }
+.footer-brand { display: flex; align-items: center; gap: 0.75rem; }
+.footer-copy { font-size: 0.8125rem; color: var(--text-faint); }
+.footer-links { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+.footer-link { font-size: 0.8125rem; color: var(--text-muted); text-decoration: none; }
+.footer-link:hover { color: var(--text); }
+.footer-divider { width: 1px; height: 14px; background: var(--border-mid); }
+.footer-attribution { font-size: 0.75rem; }
+.footer-attribution a { color: var(--text-faint); text-decoration: none; }
+.footer-attribution a:hover { color: var(--text-muted); }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .footer-inner { flex-direction: column; text-align: center; }
+  .footer-links { justify-content: center; }
+  .quick-links { align-items: stretch; }
 }
 </style>
 </head>
 <body>
 
-<header class="site-header">
+<header class="site-header" id="site-header">
   <div class="header-inner">
     <a href="/" class="logo" aria-label="НПД.Чек — на главную">
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <rect width="32" height="32" rx="8" fill="var(--color-primary)"/>
-        <path d="M16 6L8 10V17C8 21.4 11.4 25.5 16 26.5C20.6 25.5 24 21.4 24 17V10L16 6Z" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
-        <path d="M12 16.5L14.5 19L20 13.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="var(--accent)"/>
+        <path d="M16 6L8 10V17C8 21.4 11.4 25.5 16 26.5C20.6 25.5 24 21.4 24 17V10L16 6Z"
+              fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+        <path d="M12 16.5L14.5 19L20 13.5"
+              stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      НПД<span>.Чек</span>
+      <span class="logo-text">НПД<span>.Чек</span></span>
     </a>
-    <button class="theme-toggle" data-theme-toggle aria-label="Переключить тему">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-      </svg>
-    </button>
   </div>
 </header>
 
 <main>
-  <div class="page-card">
+  <div class="bg-404" aria-hidden="true">404</div>
+  <div class="ambient-blob"></div>
 
+  <div class="page-card">
     <span class="num-404" aria-hidden="true">404</span>
 
+    <div class="blink-dots" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+
     <h1 class="page-title">Страница не найдена</h1>
-    <p class="page-subtitle">
-      Возможно, ссылка устарела или вы ввели адрес с опечаткой.
-      Но аудит рисков никуда не делся — он ждёт вас на главной.
-    </p>
+    <p class="page-subtitle">Возможно, ссылка устарела или была опечатка. Вернитесь на главную.</p>
 
     <div class="quick-links">
       <a href="/" class="btn btn-primary">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
           <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
         </svg>
-        На главную
+        Вернуться на главную
       </a>
-      <a href="/#check" class="btn btn-outline">Пройти проверку бесплатно</a>
+      <a href="/#check" class="btn btn-outline">Пройти проверку</a>
     </div>
-
-    <nav class="sitemap" aria-label="Основные разделы сайта">
-      <a href="/#how-it-works">Как работает</a>
-      <span class="sitemap-sep" aria-hidden="true">·</span>
-      <a href="/#pricing">Тарифы</a>
-      <span class="sitemap-sep" aria-hidden="true">·</span>
-      <a href="/#faq">FAQ</a>
-      <span class="sitemap-sep" aria-hidden="true">·</span>
-      <a href="/offer.html">Оферта</a>
-      <span class="sitemap-sep" aria-hidden="true">·</span>
-      <a href="mailto:support@npd-check.ru">Поддержка</a>
-    </nav>
-
   </div>
 </main>
 
 <footer class="site-footer">
   <div class="footer-inner">
-    <span class="footer-copy">© 2026 npd-check.ru · НПД.Чек</span>
+    <div class="footer-brand">
+      <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="var(--accent)"/>
+        <path d="M16 6L8 10V17C8 21.4 11.4 25.5 16 26.5C20.6 25.5 24 21.4 24 17V10L16 6Z"
+              fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+        <path d="M12 16.5L14.5 19L20 13.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="footer-copy">© 2026 НПД.Чек · npd-check.ru</span>
+    </div>
     <div class="footer-links">
+      <a href="/privacy.html" class="footer-link">Политика конфиденциальности</a>
+      <span class="footer-divider" aria-hidden="true"></span>
       <a href="/offer.html" class="footer-link">Оферта</a>
-      <a href="/privacy.html" class="footer-link">Конфиденциальность</a>
-      <a href="/terms.html" class="footer-link">Условия</a></div>
-  </div>
+      <span class="footer-divider" aria-hidden="true"></span>
+      <a href="/terms.html" class="footer-link">Условия</a>
+    </div>
+    </div>
 </footer>
 
 <script>
 (function(){
-  const t = document.querySelector('[data-theme-toggle]');
-  const r = document.documentElement;
-  let d = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
-  r.setAttribute('data-theme', d);
-  const sun = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
-  const moon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-  if (t) {
-    t.innerHTML = d === 'dark' ? sun : moon;
-    t.addEventListener('click', () => {
-      d = d === 'dark' ? 'light' : 'dark';
-      r.setAttribute('data-theme', d);
-      t.innerHTML = d === 'dark' ? sun : moon;
-    });
-  }
+  const header = document.getElementById('site-header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('site-header--scrolled', window.scrollY > 10);
+  });
 })();
 </script>
-
 </body>
 </html>

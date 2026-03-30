@@ -3,5 +3,6 @@ Allow: /
 Disallow: /admin.html
 Disallow: /admin
 Disallow: /api/
+Disallow: /report/
 
 Sitemap: https://npd-check.ru/sitemap.xml

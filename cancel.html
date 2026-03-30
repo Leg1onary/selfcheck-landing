@@ -1,319 +1,186 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Оплата не завершена — НПД.Чек</title>
-<meta name="robots" content="noindex,nofollow">
-<meta name="description" content="Платёж не был завершён. Вернитесь и попробуйте ещё раз.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вы отменили оплату — НПД.Чек</title>
+  <meta name="description" content="Ничего страшного — результаты сохранены. Вернитесь когда будете готовы.">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root {
+      --bg:#0A0C18; --bg-card:#0F1224;
+      --border:rgba(255,255,255,0.06); --border-mid:rgba(255,255,255,0.10);
+      --accent:#6C7FFF; --accent-2:#8B5CF6;
+      --accent-glow:rgba(108,127,255,0.20); --accent-subtle:rgba(108,127,255,0.08);
+      --amber:#F59E0B; --amber-glow:rgba(245,158,11,0.15);
+      --green:#10B981;
+      --text:#EDF0FF; --text-muted:#7B82A8; --text-faint:#4A5070;
+      --radius-lg:16px; --radius-xl:20px; --radius-2xl:28px; --radius-full:9999px;
+      --ease:cubic-bezier(0.16,1,0.3,1); --transition:200ms var(--ease);
+      --shadow-card:0 1px 0 rgba(255,255,255,0.05) inset, 0 4px 24px rgba(0,0,0,0.4);
+      --font-display:'Instrument Serif',Georgia,serif;
+      --font-body:'Plus Jakarta Sans',system-ui,sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;scroll-behavior:smooth;overflow-x:hidden}
+    body{min-height:100dvh;font-family:var(--font-body);font-size:clamp(1rem,0.95rem + 0.25vw,1.125rem);line-height:1.7;color:var(--text);background:var(--bg);display:flex;flex-direction:column;overflow-x:hidden}
+    img,svg{display:block;max-width:100%;height:auto}
+    a{color:inherit;text-decoration:none}
+    button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
+    h1,h2,h3{text-wrap:balance;line-height:1.1}
+    a,button{transition:color var(--transition),background var(--transition),border-color var(--transition),box-shadow var(--transition),opacity var(--transition),transform var(--transition)}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Switzer:wght@300..700&display=swap" rel="stylesheet">
-<link rel="canonical" href="https://npd-check.ru/cancel.html">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
+    /* HEADER */
+    .site-header{position:sticky;top:0;z-index:100;background:rgba(10,12,24,0.85);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid transparent;transition:border-color var(--transition)}
+    .site-header--scrolled{border-bottom-color:var(--border-mid)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;height:72px;gap:24px;max-width:1200px;margin:0 auto;padding:0 clamp(24px,5vw,80px)}
+    .logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);flex-shrink:0}
+    .logo:hover{opacity:0.8}
+    .logo-text{font-family:var(--font-body);font-size:1rem;font-weight:700;letter-spacing:-0.02em}
+    .logo-text span{color:var(--accent)}
 
-<style>
-/* ============================================================
-   DESIGN TOKENS (shared with index.html)
-   ============================================================ */
-:root, [data-theme="light"] {
-  --color-bg:             #F8F9FB;
-  --color-surface:        #FFFFFF;
-  --color-surface-2:      #F3F5F9;
-  --color-surface-offset: #EDF0F5;
-  --color-border:         #DDE1EA;
-  --color-divider:        #E8EBF1;
-  --color-text:           #16192B;
-  --color-text-muted:     #616784;
-  --color-text-faint:     #A8ABBE;
-  --color-text-inverse:   #FFFFFF;
-  --color-primary:        #3B4ECC;
-  --color-primary-hover:  #2E3FA8;
-  --color-primary-light:  #EEF0FC;
-  --color-success:        #16A34A;
-  --color-success-light:  #DCFCE7;
-  --radius-sm: 0.375rem;
-  --radius-md: 0.625rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
-  --radius-full: 9999px;
-  --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
-  --shadow-sm: 0 1px 3px rgba(22, 25, 43, 0.06), 0 1px 2px rgba(22, 25, 43, 0.04);
-  --shadow-md: 0 4px 16px rgba(22, 25, 43, 0.08), 0 2px 6px rgba(22, 25, 43, 0.05);
-  --shadow-lg: 0 12px 40px rgba(22, 25, 43, 0.12), 0 4px 12px rgba(22, 25, 43, 0.07);
-  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
-  --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
-  --space-12: 3rem; --space-16: 4rem; --space-20: 5rem; --space-24: 6rem;
-  --text-xs:   clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-  --text-sm:   clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
-  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --text-lg:   clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
-  --text-xl:   clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
-  --text-2xl:  clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
-  --font-display: 'Instrument Serif', Georgia, serif;
-  --font-body: 'Switzer', 'Helvetica Neue', sans-serif;
-  --content-default: 1000px;
-}
+    /* BUTTONS */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:0.9375rem;font-weight:600;line-height:1;text-decoration:none;border:1.5px solid transparent;border-radius:var(--radius-full);padding:12px 28px;cursor:pointer;white-space:nowrap}
+    .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(108,127,255,0.35)}
+    .btn-outline{background:transparent;color:var(--accent);border-color:var(--accent)}
+    .btn-outline:hover{background:var(--accent-subtle);transform:translateY(-1px)}
+    .btn-ghost{background:transparent;color:var(--text-muted)}
+    .btn-ghost:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+    .btn-lg{font-size:1rem;padding:14px 32px}
 
-[data-theme="dark"] {
-  --color-bg:             #0F1020;
-  --color-surface:        #161829;
-  --color-surface-2:      #1C1F33;
-  --color-surface-offset: #222540;
-  --color-border:         #2D3154;
-  --color-divider:        #252847;
-  --color-text:           #E2E5F5;
-  --color-text-muted:     #8E93B8;
-  --color-text-faint:     #555A7A;
-  --color-text-inverse:   #0F1020;
-  --color-primary:        #6B7FFF;
-  --color-primary-hover:  #8A99FF;
-  --color-primary-light:  #1A1F3F;
-  --color-success:        #4ADE80;
-  --color-success-light:  #0F2A1A;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.25);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.35);
-  --shadow-lg: 0 12px 40px rgba(0,0,0,0.45);
-}
+    /* MAIN */
+    .status-page{flex:1;display:flex;align-items:center;justify-content:center;padding:4rem 1.5rem}
+    .status-card{text-align:center;max-width:520px;width:100%}
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    --color-bg:             #0F1020;
-    --color-surface:        #161829;
-    --color-surface-2:      #1C1F33;
-    --color-surface-offset: #222540;
-    --color-border:         #2D3154;
-    --color-divider:        #252847;
-    --color-text:           #E2E5F5;
-    --color-text-muted:     #8E93B8;
-    --color-text-faint:     #555A7A;
-    --color-text-inverse:   #0F1020;
-    --color-primary:        #6B7FFF;
-    --color-primary-hover:  #8A99FF;
-    --color-primary-light:  #1A1F3F;
-    --color-success:        #4ADE80;
-    --color-success-light:  #0F2A1A;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.25);
-    --shadow-md: 0 4px 16px rgba(0,0,0,0.35);
-    --shadow-lg: 0 12px 40px rgba(0,0,0,0.45);
-  }
-}
+    /* Amber icon */
+    .cancel-icon{width:80px;height:80px;border-radius:50%;background:var(--amber-glow);display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;position:relative}
+    .cancel-icon svg{width:36px;height:36px;stroke:var(--amber);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;animation:icon-in 0.5s 0.2s ease forwards}
+    @keyframes icon-in{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
 
-/* BASE */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; scroll-behavior: smooth; }
-body { min-height: 100dvh; font-family: var(--font-body); font-size: var(--text-base); line-height: 1.6; color: var(--color-text); background-color: var(--color-bg); display: flex; flex-direction: column; }
-img, svg { display: block; max-width: 100%; height: auto; }
-a { transition: color var(--transition), opacity var(--transition); }
-button { cursor: pointer; background: none; border: none; font: inherit; color: inherit; }
-h1, h2, h3 { text-wrap: balance; line-height: 1.2; }
+    .status-title{font-family:var(--font-display);font-size:clamp(1.75rem,1.4rem + 1.25vw,2.5rem);font-weight:400;color:var(--text);margin-bottom:1rem}
+    .status-subtitle{font-size:clamp(0.9375rem,0.9rem + 0.2vw,1.0625rem);color:var(--text-muted);line-height:1.7;margin-bottom:2rem}
 
-.container { width: 100%; max-width: var(--content-default); margin: 0 auto; padding: 0 var(--space-6); }
+    /* Value card */
+    .value-card{background:var(--bg-card);border:1px solid var(--border-mid);border-radius:var(--radius-2xl);box-shadow:var(--shadow-card);padding:1.5rem 1.75rem;margin-bottom:2rem;text-align:left}
+    .value-title{font-size:0.8125rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:1rem}
+    .value-list{list-style:none;display:flex;flex-direction:column;gap:0.75rem}
+    .value-list li{display:flex;align-items:center;gap:0.75rem;font-size:0.9375rem;color:var(--text);line-height:1.4}
+    .value-list li svg{flex-shrink:0;color:var(--accent)}
 
-/* HEADER */
-.site-header {
-  position: sticky; top: 0; z-index: 100;
-  background: color-mix(in srgb, var(--color-bg) 85%, transparent);
-  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--color-border);
-}
-.header-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: var(--space-6); }
-.logo { display: flex; align-items: center; gap: var(--space-3); text-decoration: none; color: var(--color-text); flex-shrink: 0; }
-.logo:hover { opacity: 0.85; }
-.logo-text { font-family: var(--font-body); font-size: var(--text-sm); font-weight: 700; letter-spacing: -0.01em; color: var(--color-text); }
-.logo-text span { color: var(--color-primary); }
-.header-actions { display: flex; align-items: center; gap: var(--space-3); }
-.theme-toggle { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--radius-md); color: var(--color-text-muted); }
-.theme-toggle:hover { background: var(--color-surface-offset); color: var(--color-text); }
+    .status-actions{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap}
+    .bonus-note{margin-top:1.5rem;font-size:0.8125rem;color:var(--text-faint);line-height:1.6}
 
-/* BUTTONS */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); font-size: var(--text-sm); font-weight: 600; line-height: 1; text-decoration: none; border: 1.5px solid transparent; border-radius: var(--radius-md); padding: 0.625rem var(--space-5); cursor: pointer; white-space: nowrap; transition: all var(--transition); }
-.btn-primary { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
-.btn-primary:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(59, 78, 204, 0.3); }
-.btn-outline { background: transparent; color: var(--color-primary); border-color: var(--color-primary); }
-.btn-outline:hover { background: var(--color-primary-light); }
-.btn-ghost { background: transparent; color: var(--color-text-muted); border-color: transparent; }
-.btn-ghost:hover { color: var(--color-text); background: var(--color-surface-offset); }
-.btn-lg { font-size: var(--text-base); padding: var(--space-4) var(--space-8); border-radius: var(--radius-lg); }
-
-/* CANCEL CONTENT */
-.status-page { flex: 1; display: flex; align-items: center; justify-content: center; padding: var(--space-16) var(--space-6); }
-.status-card { text-align: center; max-width: 520px; width: 100%; }
-
-.cancel-icon {
-  width: 100px; height: 100px; margin: 0 auto var(--space-8);
-  border-radius: 50%;
-  background: var(--color-surface-offset);
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
-}
-
-.cancel-icon svg {
-  width: 40px; height: 40px;
-  stroke: var(--color-text-faint);
-  stroke-width: 2.5;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0;
-  animation: cancel-fade-in 0.5s 0.2s ease forwards;
-}
-
-@keyframes cancel-fade-in {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.status-title {
-  font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  font-weight: 400;
-  color: var(--color-text);
-  margin-bottom: var(--space-4);
-}
-
-.status-subtitle {
-  font-size: var(--text-base);
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-8);
-  line-height: 1.7;
-}
-
-.status-reassurance {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4) var(--space-6);
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-8);
-}
-
-.status-reassurance svg {
-  flex-shrink: 0;
-  color: var(--color-success);
-}
-
-.status-actions {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-4);
-  flex-wrap: wrap;
-}
-
-/* FOOTER */
-.site-footer { background: var(--color-surface-2); border-top: 1px solid var(--color-divider); padding: var(--space-10) 0; margin-top: auto; }
-.footer-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); flex-wrap: wrap; }
-.footer-brand { display: flex; align-items: center; gap: var(--space-3); }
-.footer-copy { font-size: var(--text-xs); color: var(--color-text-faint); }
-.footer-links { display: flex; align-items: center; gap: var(--space-6); }
-.footer-link { font-size: var(--text-xs); color: var(--color-text-muted); text-decoration: none; }
-.footer-link:hover { color: var(--color-text); }
-.footer-divider { width: 1px; height: 14px; background: var(--color-border); }
-
-@media (max-width: 768px) {
-  .footer-inner { flex-direction: column; text-align: center; }
-  .status-actions { flex-direction: column; align-items: stretch; }
-}
-</style>
+    /* FOOTER */
+    .site-footer{background:var(--bg-card);border-top:1px solid var(--border);padding:2rem 0;margin-top:auto}
+    .footer-inner{max-width:1200px;margin:0 auto;padding:0 clamp(24px,5vw,80px);display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap}
+    .footer-brand{display:flex;align-items:center;gap:0.75rem}
+    .footer-copy{font-size:0.8125rem;color:var(--text-faint)}
+    .footer-links{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+    .footer-link{font-size:0.8125rem;color:var(--text-muted)}
+    .footer-link:hover{color:var(--text)}
+    .footer-divider{width:1px;height:14px;background:var(--border-mid)}
+    @media(max-width:768px){.footer-inner{flex-direction:column;text-align:center}.footer-links{justify-content:center}.status-actions{flex-direction:column;align-items:stretch}}
+  </style>
 </head>
 <body>
-
-<header class="site-header">
-  <div class="container">
-    <div class="header-inner">
-      <a href="/" class="logo" aria-label="НПД.Чек — на главную">
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect width="32" height="32" rx="8" fill="var(--color-primary)"/>
-          <path d="M16 6L8 10V17C8 21.4 11.4 25.5 16 26.5C20.6 25.5 24 21.4 24 17V10L16 6Z"
-                fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
-          <path d="M12 16.5L14.5 19L20 13.5"
-                stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="logo-text">НПД<span>.Чек</span></span>
-      </a>
-
-      <div class="header-actions">
-        <button class="theme-toggle" data-theme-toggle aria-label="Переключить тему">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
-      </div>
-    </div>
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <a href="/" class="logo" aria-label="НПД.Чек — на главную">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="var(--accent)"/>
+        <path d="M16 6L8 10V17C8 21.4 11.4 25.5 16 26.5C20.6 25.5 24 21.4 24 17V10L16 6Z" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+        <path d="M12 16.5L14.5 19L20 13.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="logo-text">НПД<span>.</span>Чек</span>
+    </a>
   </div>
 </header>
 
 <main class="status-page">
   <div class="status-card">
-    <div class="cancel-icon">
+    <div class="cancel-icon" aria-hidden="true">
+      <!-- Стрелка назад — нейтральная, не пугающая -->
       <svg viewBox="0 0 24 24">
-        <line x1="18" y1="6" x2="6" y2="18"/>
-        <line x1="6" y1="6" x2="18" y2="18"/>
+        <path d="M19 12H5"/>
+        <path d="M12 19l-7-7 7-7"/>
       </svg>
     </div>
 
-    <h1 class="status-title">Оплата не была завершена</h1>
-    <p class="status-subtitle">Ничего страшного — ваши ответы сохранены. Вы можете вернуться и оплатить позже.</p>
+    <h1 class="status-title">Вы вернулись без оплаты</h1>
+    <p class="status-subtitle">
+      Ничего страшного — результаты вашего аудита сохранены.<br>
+      Вернитесь, когда будете готовы.
+    </p>
 
-    <div class="status-reassurance">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-      Результаты вашей проверки доступны на главной странице
+    <div class="value-card">
+      <p class="value-title">Что было в вашем отчёте</p>
+      <ul class="value-list">
+        <li>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="13" y2="14"/></svg>
+          PDF-отчёт с оценкой вашего риска
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Договор ГПХ с вашими данными
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Чек-лист защиты НПД
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          Чек-лист защиты от переквалификации
+        </li>
+      </ul>
     </div>
 
     <div class="status-actions">
-      <a href="/#check" class="btn btn-primary btn-lg">Вернуться к результатам</a>
-      <a href="/#check" class="btn btn-outline btn-lg">Попробовать снова</a>
+      <a href="/" class="btn btn-primary btn-lg" id="btn-retry">
+        Получить за 990 ₽
+      </a>
+      <a href="/" class="btn btn-outline btn-lg">На главную</a>
+      <a href="mailto:support@npd-check.ru" class="btn btn-ghost">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Написать нам
+      </a>
     </div>
+
+    <p class="bonus-note">Цена 990 ₽ зафиксирована — успейте оформить до конца недели.</p>
   </div>
 </main>
 
 <footer class="site-footer">
-  <div class="container">
-    <div class="footer-inner">
-      <div class="footer-brand">
-        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect width="32" height="32" rx="8" fill="var(--color-primary)"/>
-          <path d="M16 6L8 10V17C8 21.4 11.4 25.5 16 26.5C20.6 25.5 24 21.4 24 17V10L16 6Z"
-                fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
-          <path d="M12 16.5L14.5 19L20 13.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="footer-copy">© 2026 npd-check.ru · НПД.Чек</span>
-      </div>
-
-      <div class="footer-links">
-        <a href="/privacy.html" class="footer-link">Политика конфиденциальности</a>
-        <span class="footer-divider" aria-hidden="true"></span>
-        <a href="/offer.html" class="footer-link">Оферта</a>
-        <span class="footer-divider" aria-hidden="true"></span>
-        <a href="/terms.html" class="footer-link">Условия использования</a>
-        </div>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="var(--accent)"/>
+        <path d="M16 6L8 10V17C8 21.4 11.4 25.5 16 26.5C20.6 25.5 24 21.4 24 17V10L16 6Z" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+        <path d="M12 16.5L14.5 19L20 13.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="footer-copy">© 2026 НПД.Чек · npd-check.ru</span>
+    </div>
+    <div class="footer-links">
+      <a href="privacy.html" class="footer-link">Конфиденциальность</a>
+      <span class="footer-divider" aria-hidden="true"></span>
+      <a href="offer.html" class="footer-link">Оферта</a>
+      <span class="footer-divider" aria-hidden="true"></span>
+      <a href="terms.html" class="footer-link">Условия</a>
     </div>
   </div>
 </footer>
 
 <script>
-(function(){
-  const t = document.querySelector('[data-theme-toggle]');
-  const r = document.documentElement;
-  let d = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
-  r.setAttribute('data-theme', d);
-  const sunIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
-  const moonIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-  if (t) {
-    t.innerHTML = d === 'dark' ? sunIcon : moonIcon;
-    t.addEventListener('click', () => {
-      d = d === 'dark' ? 'light' : 'dark';
-      r.setAttribute('data-theme', d);
-      t.innerHTML = d === 'dark' ? sunIcon : moonIcon;
-    });
-  }
+(function () {
+  var header = document.getElementById('site-header');
+  window.addEventListener('scroll', function () {
+    header.classList.toggle('site-header--scrolled', window.scrollY > 10);
+  });
 })();
 </script>
 </body>
