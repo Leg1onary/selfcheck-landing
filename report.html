@@ -1459,7 +1459,8 @@ function renderReport(data, token) {
       <div class="section-label">⬆️ Апгрейд</div>
       <h2 class="section-title">Хотите больше?</h2>
       <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.6;">Усильте защиту — доплатите разницу цены и получите дополнительные документы.</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div style="display:grid;grid-template-columns:${tier === 'shield' ? '1fr' : '1fr 1fr'};gap:14px;">
+        ${tier === 'protection' ? `
         <div style="background:var(--bg-elevated);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:20px;">
           <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);margin-bottom:8px;">Щит</div>
           <div style="font-size:1.25rem;font-weight:800;color:var(--text);margin-bottom:6px;">+800 ₽</div>
@@ -1473,10 +1474,10 @@ function renderReport(data, token) {
             onmouseover="this.style.opacity='0.9';this.style.transform='translateY(-1px)'" onmouseout="this.style.opacity='1';this.style.transform='translateY(0)'">
             Получить «Щит» →
           </button>
-        </div>
+        </div>` : ''}
         <div style="background:var(--bg-elevated);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-lg);padding:20px;">
           <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent-2);margin-bottom:8px;">Бронежилет</div>
-          <div style="font-size:1.25rem;font-weight:800;color:var(--text);margin-bottom:6px;">+2 000 ₽</div>
+          <div style="font-size:1.25rem;font-weight:800;color:var(--text);margin-bottom:6px;">${tier === 'shield' ? '+1 200 ₽' : '+2 000 ₽'}</div>
           <ul style="list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:5px;">
             <li style="font-size:12px;color:var(--text-muted);"><span style="color:var(--green);">&#10003;</span> Всё из «Щита»</li>
             <li style="font-size:12px;color:var(--text-muted);"><span style="color:var(--green);">&#10003;</span> Шаблон ответа в ФНС</li>
@@ -1600,8 +1601,7 @@ async function upgradeToTier(upgradeTo) {
   if (hint) { hint.style.color = 'var(--text-muted)'; hint.textContent = 'Создаём платёж…'; }
 
   try {
-    const currentTier = document.getElementById('sec-upgrade')
-      ?.dataset?.currentTier || 'protection';
+    const currentTier = window.__currentTier || 'protection';
 
     const resp = await fetch('/api/payment/upgrade', {
       method: 'POST',
@@ -1610,7 +1610,7 @@ async function upgradeToTier(upgradeTo) {
         session_id: sessionData,
         email: email,
         upgrade_to: upgradeTo,
-        upgradefrom: currentTier,
+        upgrade_from: currentTier,
       }),
     });
 
@@ -1817,8 +1817,9 @@ async function loadReport() {
 
     const data = await resp.json();
 
-    // Сохраняем session_id для апгрейда и email для апгрейда
+    // Сохраняем session_id, tier и email для апгрейда
     window.__sessionId = data.session_id || null;
+    window.__currentTier = data.tier || 'protection';
     window.reportToken = token;
     if (data.email) localStorage.setItem('npd_email', data.email);
 
