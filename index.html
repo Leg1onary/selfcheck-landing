@@ -1720,18 +1720,6 @@ a, button, [role="button"] {
     .catch(() => {});
 })();
 
-// Cookie banner
-(function(){
-  const banner = document.getElementById('cookie-banner');
-  if (!window._cookieConsent) {
-    setTimeout(() => { banner.style.display = 'flex'; }, 1500);
-  }
-})();
-function cookieAction(accept) {
-  window._cookieConsent = accept;
-  document.getElementById('cookie-banner').style.display = 'none';
-}
-
 // Select tier
 function selectTier(tier){
   window.selectedTier = tier;
@@ -1753,6 +1741,42 @@ function selectTier(tier){
     }
   });
 </script>
+
+
+<!-- Yandex.Metrika + Cookie consent -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(13,16,33,0.97);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.08);color:#9BA3C4;padding:14px 20px;z-index:9999;font-size:0.8125rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+  <span style="flex:1;min-width:200px;">Мы используем cookie для аналитики (Яндекс.Метрика). <a href="/privacy.html" style="color:#6C7FFF;text-decoration:none;">Подробнее</a></span>
+  <button onclick="cookieAccept()" style="background:linear-gradient(135deg,#6C7FFF,#8B5CF6);color:#fff;border:none;padding:8px 20px;border-radius:9999px;cursor:pointer;font-size:0.8125rem;font-weight:600;">Принять</button>
+  <button onclick="cookieDeny()" style="background:transparent;color:#9BA3C4;border:1px solid rgba(255,255,255,0.15);padding:8px 16px;border-radius:9999px;cursor:pointer;font-size:0.8125rem;">Отказаться</button>
+</div>
+<script>
+function initMetrika(){
+  (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+  m[i].l=1*new Date();
+  for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+  k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+  })(window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
+  ym(108266785,'init',{webvisor:true,clickmap:true,accurateTrackBounce:true,trackLinks:true});
+}
+function cookieAccept(){
+  localStorage.setItem('cookie_consent','yes');
+  document.getElementById('cookie-banner').style.display='none';
+  initMetrika();
+}
+function cookieDeny(){
+  localStorage.setItem('cookie_consent','no');
+  document.getElementById('cookie-banner').style.display='none';
+}
+(function(){
+  var consent = localStorage.getItem('cookie_consent');
+  if(!consent){
+    setTimeout(function(){ document.getElementById('cookie-banner').style.display='flex'; }, 1500);
+  } else if(consent === 'yes'){
+    initMetrika();
+  }
+})();
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/108266785" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
 </body>
 </html>
