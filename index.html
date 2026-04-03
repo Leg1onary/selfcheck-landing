@@ -716,6 +716,8 @@ a, button, [role="button"] {
   flex-direction: column;
   position: relative;
 }
+/* Не позволять display:flex перебивать атрибут hidden */
+.pricing-card[hidden] { display: none !important; }
 
 .pricing-card--popular {
   border-color: var(--accent);
