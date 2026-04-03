@@ -1,5 +1,6 @@
 /**
  * SelfCheck — Quiz Engine
+ * Blocks applied: 1 (paywall), 2 (calculator), 3 (consent), 4 (email-capture), 5.2 (counter), 6 (button)
  */
 
 (function () {
@@ -26,7 +27,7 @@
     { id: 16, text: 'Есть ли в договоре фраза «трудовая функция», «рабочее место» или «должность»?', hint: 'Такие формулировки делают договор ГПХ де-факто трудовым в глазах суда', options: [{ value: 'no', label: 'Нет, договор описывает только результат работ' }, { value: 'function', label: 'Есть похожие формулировки, но не точные' }, { value: 'yes', label: 'Да, такие фразы присутствуют в договоре' }] },
   ];
 
-  let state = { step: 'quiz', currentQ: 0, answers: [], result: null, selectedValue: null };
+  let state = { step: 'quiz', currentQ: 0, answers: [], result: null, selectedValue: null, _emailShown: false, _quizStarted: false, _sessionId: null };
   let quizEl = null;
 
   function init(containerId) {
@@ -47,6 +48,11 @@
   }
 
   function renderQuiz() {
+    // БЛОК 4: Интерстициальный экран на шаге 8
+    if (state.currentQ === 7 && !state._emailShown) {
+      return renderEmailCapture();
+    }
+
     const q = QUESTIONS[state.currentQ];
     const total = QUESTIONS.length;
     const progress = (state.currentQ / total) * 100;
@@ -77,6 +83,31 @@
     </div>`;
   }
 
+  // БЛОК 4: Email-захват интерстициальный экран
+  function renderEmailCapture() {
+    return `
+    <div class="quiz-wrap quiz-email-capture">
+      <div class="quiz-ec-icon">📊</div>
+      <h3 class="quiz-ec-title">Первые результаты уже получены</h3>
+      <p class="quiz-ec-desc">
+        На основе ваших ответов мы уже выявили
+        несколько факторов риска.<br>
+        Введите email — сохраним результат,
+        даже если закроете страницу.
+      </p>
+      <div class="quiz-ec-form">
+        <input type="email" id="ec-email" class="result-cta-email"
+          placeholder="email@example.com" autocomplete="email">
+        <button class="btn btn-primary" data-action="ec-submit">
+          Продолжить →
+        </button>
+      </div>
+      <button class="quiz-ec-skip" data-action="ec-skip">
+        Пропустить и продолжить
+      </button>
+    </div>`;
+  }
+
   function renderLoading() {
     return `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы<br>по критериям ФНС и Минэк 2026…</p></div>`;
   }
@@ -90,6 +121,28 @@
     };
     const cfg = riskConfig[r.overall_risk];
     const gaugeWidth = Math.min(100, r.score);
+
+    // БЛОК 1: считаем количество скрытых факторов
+    const lockedCount = r.factors.filter(
+      f => f.risk_level === 'yellow' || f.risk_level === 'red'
+    ).length;
+
+    const lockedBanner = lockedCount > 0
+      ? `<div class="result-locked-banner">
+          🔒 У вас <strong>${lockedCount}</strong> скрытых
+          фактор${lockedCount === 1 ? '' : (lockedCount < 5 ? 'а' : 'ов')} риска из
+          ${r.factors.length} — разблокируются в отчёте
+         </div>`
+      : '';
+
+    // БЛОК 4: подтверждение сохранённого email
+    const emailSavedHtml = window.quizEmail
+      ? `<p class="result-email-saved">
+          ✓ Результат будет отправлен на
+          <strong>${window.quizEmail}</strong>
+         </p>`
+      : '';
+
     return `
     <div class="quiz-result">
       <div class="result-hero" style="border-color:${cfg.border};background:${cfg.bg};">
@@ -102,8 +155,10 @@
         </div>
       </div>
       <p class="result-summary">${r.summary}</p>
+      ${emailSavedHtml}
       <div class="result-factors">
         <h4 class="result-section-title">Факторы риска по вашим ответам</h4>
+        ${lockedBanner}
         <div class="result-factors-list">
           ${r.factors.map(f => {
             const fc = { green: '#16A34A', yellow: '#D97706', red: '#DC2626' }[f.risk_level];
@@ -113,12 +168,13 @@
               <div class="factor-body">
                 <div class="factor-question">${f.question_text}</div>
                 <div class="factor-answer">Ваш ответ: <em>${f.answer}</em></div>
-                ${f.risk_level !== 'green' ? '<div class="factor-explanation factor-explanation--locked">🔒 Подробный анализ и рекомендации — в полном отчёте</div>' : ''}
+                ${f.risk_level !== 'green' ? '<div class="factor-explanation factor-explanation--locked">Подробный анализ и рекомендации — в полном отчёте</div>' : ''}
               </div>
             </div>`;
           }).join('')}
         </div>
       </div>
+
       <div class="result-cta-block">
         <div class="result-cta-card">
           <div class="result-cta-icon">📋</div>
@@ -144,42 +200,81 @@
             </button>
           </div>
           <ul class="tier-features" id="tier-features"></ul>
-          <label class="result-consent" style="display:flex;align-items:flex-start;gap:8px;margin-bottom:12px;cursor:pointer;font-size:0.8125rem;color:var(--text-faint)">
-            <input type="checkbox" id="cta-consent" style="margin-top:2px;flex-shrink:0;">
-            <span>Я принимаю <a href="offer.html" target="_blank" style="color:var(--accent)">условия оферты</a> и <a href="privacy.html" target="_blank" style="color:var(--accent)">политику конфиденциальности</a></span>
-          </label>
           <div class="result-cta-form" id="cta-form">
-            <input type="email" id="cta-email" class="result-cta-email" placeholder="Ваш email для получения отчёта" autocomplete="email">
-            <button class="btn btn-primary" data-action="get-report" id="cta-pay-btn">
-              Получить за <span id="cta-price-label">990</span> ₽
+            <input type="email" id="cta-email" class="result-cta-email" placeholder="Ваш email для получения отчёта" autocomplete="email"${window.quizEmail ? ` value="${window.quizEmail}"` : ''}>
+            <!-- БЛОК 6: новая кнопка оплаты -->
+            <button class="btn btn-buy" data-action="get-report" id="cta-pay-btn">
+              🛡 Защититься — <span id="cta-price-label">990</span> ₽
             </button>
           </div>
+          <!-- БЛОК 6: микро-гарантия -->
+          <p class="result-micro-guarantee">
+            ✓ Мгновенная выдача&nbsp;&nbsp;
+            ✓ Файлы навсегда&nbsp;&nbsp;
+            ✓ Возврат если не помогло
+          </p>
+          <!-- БЛОК 3: микро-оферта вместо чекбокса -->
+          <p class="result-offer-note">
+            Нажимая кнопку, вы принимаете
+            <a href="offer.html" target="_blank">условия оферты</a>
+            и <a href="privacy.html" target="_blank">политику конфиденциальности</a>
+          </p>
           <p class="result-cta-hint" id="cta-hint"></p>
         </div>
         <button class="quiz-restart" data-action="restart">← Пройти заново</button>
       </div>
-      <div class="result-calc" style="background:linear-gradient(135deg,#1E2235,#2A1F3D);border:1px solid #3A3E5C;border-radius:14px;padding:20px 24px;margin:16px 0;">
-        <h4 style="color:#E8EAFB;font-size:1rem;font-weight:600;margin:0 0 12px;">Калькулятор последствий переквалификации</h4>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
-          <label style="color:#9BA3C4;font-size:0.875rem;white-space:nowrap;">Доход от заказчика в месяц:</label>
-          <input type="number" id="calc-income" placeholder="100000" min="0" max="99999999"
-            style="background:#131525;border:1px solid #3A3E5C;color:#E8EAFB;border-radius:8px;padding:8px 12px;font-size:0.875rem;width:120px;">
-          <span style="color:#9BA3C4;font-size:0.875rem;">₽</span>
-        </div>
-        <div id="calc-results" style="display:none;">
-          <div style="background:#0D0F1C;border-radius:10px;padding:14px 16px;margin-bottom:10px;">
-            <div style="color:#E85D04;font-size:0.8125rem;font-weight:600;margin-bottom:8px;">Ваши риски (самозанятый):</div>
-            <div style="display:flex;justify-content:space-between;color:#9BA3C4;font-size:0.8125rem;margin-bottom:4px;"><span>Доначисление НДФЛ 13%:</span><span id="calc-ndfl" style="color:#E8EAFB;font-weight:600;"></span></div>
-            <div style="display:flex;justify-content:space-between;color:#9BA3C4;font-size:0.8125rem;margin-bottom:4px;"><span>Штраф за неуплату 20%:</span><span id="calc-penalty" style="color:#E8EAFB;font-weight:600;"></span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.875rem;margin-top:8px;padding-top:8px;border-top:1px solid #2A2D45;"><span style="color:#E8EAFB;font-weight:600;">Итого ваши доначисления:</span><span id="calc-total" style="color:#E85D04;font-weight:700;"></span></div>
-          </div>
-          <div style="background:#0D0F1C;border-radius:10px;padding:14px 16px;">
-            <div style="color:#F59E0B;font-size:0.8125rem;font-weight:600;margin-bottom:8px;">Риски вашего заказчика:</div>
-            <div style="display:flex;justify-content:space-between;color:#9BA3C4;font-size:0.8125rem;"><span>Страховые взносы ~30%:</span><span id="calc-employer" style="color:#E8EAFB;font-weight:600;"></span></div>
-            <div style="color:#9BA3C4;font-size:0.75rem;margin-top:6px;">Платит заказчик — но именно это часто становится причиной расторжения договора</div>
+
+      <!-- БЛОК 2: Новый калькулятор потерь -->
+      <div class="result-calc">
+        <h4 class="result-calc-title">
+          ⚠️ Ваши потенциальные потери
+        </h4>
+        <div class="result-calc-row">
+          <label class="result-calc-label">
+            Среднемесячный доход от заказчика:
+          </label>
+          <div class="result-calc-input-wrap">
+            <input type="range" id="calc-income-range"
+              min="10000" max="500000" step="5000" value="50000"
+              class="result-calc-range">
+            <span class="result-calc-income-display"
+              id="calc-income-display">50 000 ₽/мес</span>
           </div>
         </div>
+        <div class="result-calc-periods" id="calc-periods">
+          <button class="calc-period-btn active" data-months="6">6 мес</button>
+          <button class="calc-period-btn" data-months="12">12 мес</button>
+          <button class="calc-period-btn" data-months="24">24 мес</button>
+        </div>
+        <div class="result-calc-breakdown">
+          <div class="result-calc-line">
+            <span>НДФЛ 13%:</span>
+            <span id="calc-ndfl">—</span>
+          </div>
+          <div class="result-calc-line">
+            <span>Страховые взносы ~30%:</span>
+            <span id="calc-contributions">—</span>
+          </div>
+          <div class="result-calc-line">
+            <span>Штраф 20–40%:</span>
+            <span id="calc-penalty">—</span>
+          </div>
+          <div class="result-calc-line result-calc-total">
+            <span>ИТОГО под угрозой:</span>
+            <span id="calc-total" class="result-calc-total-value">—</span>
+          </div>
+        </div>
+        <button class="btn result-calc-cta"
+          id="calc-cta-btn" onclick="
+            document.querySelector('#tier-tabs [data-tier=protection]')
+                    ?.click();
+            document.querySelector('.result-cta-card')
+                    ?.scrollIntoView({behavior:'smooth',block:'center'});
+          ">
+          🛡 Защититься за 990 ₽ →
+        </button>
       </div>
+
       <p class="result-disclaimer">Результат носит информационный характер и не является юридической консультацией.</p>
     </div>`;
   }
@@ -189,9 +284,25 @@
   }
 
   const TIER_FEATURES = {
-    protection: ['Персональный PDF-отчёт с анализом рисков','Шаблон договора ГПХ (.docx)','Шаблон акта выполненных работ (.docx)','Чек-лист безопасности НПД (12 пунктов)','Калькулятор налоговых последствий'],
-    shield:     ['Всё из тарифа Стандарт','Персонализированный договор ГПХ под ваши данные','Письмо заказчику с защитными формулировками','Консультация в чате 24ч'],
-    armor:      ['Всё из тарифа Щит','Возражение в ФНС на акт проверки (PDF)','Приоритетная поддержка'],
+    protection: [
+      'Персональный PDF-отчёт с анализом рисков',
+      'Шаблон договора ГПХ (.docx)',
+      'Шаблон акта выполненных работ (.docx)',
+      'Чек-лист безопасности НПД (12 пунктов)',
+      'Калькулятор налоговых последствий',
+    ],
+    shield: [
+      'Всё из тарифа Стандарт',
+      'Персонализированный договор ГПХ под ваши данные',
+      'Персонализированный чек-лист из 15 пунктов по вашим ответам на квиз',
+      'AI-анализ договора ГПХ — загрузи файл, получи список рисков за 60 секунд',
+    ],
+    armor: [
+      'Всё из тарифа Щит',
+      'Шаблон официального ответа на требование ФНС о переквалификации (форма КНД 1165050)',
+      'Готовые возражения при оспаривании статуса самозанятого — 3 сценария',
+      'Приоритетная поддержка',
+    ],
   };
 
   function updateTierUI(tier, price) {
@@ -200,30 +311,87 @@
     quizEl.querySelectorAll('.tier-tab').forEach(t => t.classList.toggle('active', t.dataset.tier === tier));
     const featEl = quizEl.querySelector('#tier-features');
     if (featEl) featEl.innerHTML = (TIER_FEATURES[tier] || []).map(f => `<li>${f}</li>`).join('');
+    // БЛОК 6: обновляем только span внутри кнопки, не текст кнопки целиком
     const priceLabel = quizEl.querySelector('#cta-price-label');
     if (priceLabel) priceLabel.textContent = Number(price).toLocaleString('ru');
   }
 
+  // БЛОК 2: Новый calcUpdate с слайдером и периодами
   function calcUpdate() {
-    const income = parseFloat(document.getElementById('calc-income')?.value) || 0;
-    if (income > 0) {
-      const ndfl = Math.round(income * 0.13);
-      const penalty = Math.round(ndfl * 0.20);
-      const total = ndfl + penalty;
-      const employer = Math.round(income * 0.30);
-      const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val.toLocaleString('ru'); };
-      set('calc-ndfl', ndfl); set('calc-penalty', penalty); set('calc-total', total); set('calc-employer', employer);
-      const res = document.getElementById('calc-results');
-      if (res) res.style.display = 'block';
-    } else {
-      const res = document.getElementById('calc-results');
-      if (res) res.style.display = 'none';
+    const rangeEl = document.getElementById('calc-income-range');
+    const displayEl = document.getElementById('calc-income-display');
+    const income = rangeEl ? parseFloat(rangeEl.value) : 0;
+    if (displayEl) {
+      displayEl.textContent = income.toLocaleString('ru') + ' ₽/мес';
+    }
+    if (!income) return;
+
+    const activeBtn = document.querySelector('.calc-period-btn.active');
+    const months = activeBtn ? parseInt(activeBtn.dataset.months) : 6;
+
+    const ndfl     = Math.round(income * months * 0.13);
+    const contrib  = Math.round(income * months * 0.30);
+    const penalty  = Math.round((ndfl + contrib) * 0.30);
+    const total    = ndfl + contrib + penalty;
+
+    const fmt = v => v.toLocaleString('ru') + ' ₽';
+    const set = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = fmt(val);
+    };
+    set('calc-ndfl', ndfl);
+    set('calc-contributions', contrib);
+    set('calc-penalty', penalty);
+    set('calc-total', total);
+
+    // Анимация итоговой суммы
+    const totalEl = document.getElementById('calc-total');
+    if (totalEl) {
+      totalEl.style.transition = 'none';
+      totalEl.style.transform = 'scale(1.06)';
+      requestAnimationFrame(() => {
+        totalEl.style.transition = 'transform 300ms ease';
+        totalEl.style.transform = 'scale(1)';
+      });
     }
   }
   window.calcUpdate = calcUpdate;
 
   function attachHandlers() {
     if (!quizEl) return;
+
+    // БЛОК 4: email-захват
+    const ecSubmit = quizEl.querySelector('[data-action="ec-submit"]');
+    if (ecSubmit) {
+      ecSubmit.addEventListener('click', async () => {
+        const email = quizEl.querySelector('#ec-email')?.value.trim();
+        state._emailShown = true;
+        if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          window.quizEmail = email;
+          try {
+            await fetch(`${API_BASE}/leads`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email,
+                step: 8,
+                partial: true,
+                session_id: state._sessionId || null,
+              }),
+            });
+          } catch(e) { /* не блокируем квиз при ошибке */ }
+        }
+        render();
+      });
+    }
+
+    const ecSkip = quizEl.querySelector('[data-action="ec-skip"]');
+    if (ecSkip) {
+      ecSkip.addEventListener('click', () => {
+        state._emailShown = true;
+        render();
+      });
+    }
 
     quizEl.querySelectorAll('.quiz-option').forEach(el => {
       el.addEventListener('click', () => {
@@ -267,7 +435,7 @@
 
     quizEl.querySelectorAll('[data-action="restart"]').forEach(btn => {
       btn.addEventListener('click', () => {
-        state = { step: 'quiz', currentQ: 0, answers: [], result: null, selectedValue: null };
+        state = { step: 'quiz', currentQ: 0, answers: [], result: null, selectedValue: null, _emailShown: false, _quizStarted: false, _sessionId: null };
         render();
       });
     });
@@ -277,8 +445,24 @@
       tab.addEventListener('click', () => updateTierUI(tab.dataset.tier, tab.dataset.price));
     });
 
-    const calcInput = quizEl.querySelector('#calc-income');
-    if (calcInput) calcInput.addEventListener('input', calcUpdate);
+    // БЛОК 2: слайдер дохода
+    const rangeInput = quizEl.querySelector('#calc-income-range');
+    if (rangeInput) rangeInput.addEventListener('input', calcUpdate);
+
+    // БЛОК 2: кнопки периода
+    quizEl.querySelectorAll('.calc-period-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        quizEl.querySelectorAll('.calc-period-btn')
+              .forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        calcUpdate();
+      });
+    });
+
+    // Запустить сразу для дефолтных значений
+    if (quizEl.querySelector('#calc-income-range')) {
+      setTimeout(calcUpdate, 50);
+    }
 
     const reportBtn = quizEl.querySelector('[data-action="get-report"]');
     if (reportBtn) reportBtn.addEventListener('click', () => startPayment());
@@ -318,18 +502,14 @@
     const hint       = quizEl.querySelector('#cta-hint');
     const email      = emailInput ? emailInput.value.trim() : '';
 
-    const consentBox = quizEl.querySelector('#cta-consent');
-    if (consentBox && !consentBox.checked) {
-      if (hint) { hint.style.color = '#DC2626'; hint.textContent = 'Необходимо принять условия оферты'; }
-      return;
-    }
+    // БЛОК 3: чекбокс убран — валидируем только email
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       if (hint) { hint.style.color = '#DC2626'; hint.textContent = 'Введите корректный email для получения отчёта'; }
       if (emailInput) emailInput.focus();
       return;
     }
 
-    if (btn)  { btn.textContent = 'Создаём заказ…'; btn.disabled = true; }
+    if (btn)  { btn.innerHTML = 'Создаём заказ…'; btn.disabled = true; }
     if (hint) { hint.style.color = '#616784'; hint.textContent = 'Подключаемся к платёжной системе…'; }
 
     try {
@@ -340,6 +520,7 @@
       });
       if (!sessionResp.ok) throw new Error(`Ошибка создания сессии: HTTP ${sessionResp.status}`);
       const { session_id } = await sessionResp.json();
+      state._sessionId = session_id;
 
       const tier = (window.selectedTier && window.selectedTier !== 'free') ? window.selectedTier : 'protection';
       const paymentResp = await fetch(`${API_BASE}/payment/create`, {
@@ -365,7 +546,10 @@
     } catch (err) {
       console.error('SelfCheck payment error:', err);
       if (hint) { hint.style.color = '#DC2626'; hint.textContent = err.message || 'Ошибка. Попробуйте ещё раз.'; }
-      if (btn)  { btn.textContent = 'Получить за ' + (window.selectedPrice || 990).toLocaleString('ru') + ' ₽'; btn.disabled = false; }
+      if (btn)  {
+        btn.innerHTML = '🛡 Защититься — <span id="cta-price-label">' + (window.selectedPrice || 990).toLocaleString('ru') + '</span> ₽';
+        btn.disabled = false;
+      }
     }
   }
 

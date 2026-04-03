@@ -930,6 +930,40 @@ a, button, [role="button"] {
 }
 .disclaimer-banner svg { flex-shrink: 0; margin-top: 2px; color: var(--accent); opacity: 0.6; }
 
+
+/* ─── БЛОК 5: Таймер срочности ────────────────────────────────────────────── */
+.hero-timer {
+  font-size: 0.8125rem;
+  color: var(--amber);
+  margin-top: 8px;
+  font-weight: 500;
+  min-height: 1.2em;
+}
+
+/* ─── БЛОК 8: Якорная цена, social proof, бейдж ─────────────────────────── */
+.pricing-price-was {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+  text-decoration: line-through;
+  margin-bottom: 2px;
+}
+.pricing-social-proof {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  margin-top: 6px;
+}
+.hero-free-badge {
+  display: inline-block;
+  background: rgba(16,185,129,0.10);
+  color: var(--green);
+  border: 1px solid rgba(16,185,129,0.25);
+  border-radius: var(--radius-full);
+  padding: 4px 14px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  margin-top: 8px;
+}
 /* ============================================================
    COOKIE
    ============================================================ */
@@ -1028,6 +1062,8 @@ a, button, [role="button"] {
           </span>
         </div>
 
+
+        <span class="hero-free-badge">Базовая проверка — бесплатно, без регистрации</span>
         <div class="hero-cta-group">
           <a href="#quiz" class="btn btn-primary btn-xl">
             Узнать свой уровень риска →
@@ -1038,6 +1074,8 @@ a, button, [role="button"] {
           Уже <span id="trust-count">0</span> самозанятых прошли проверку
         </div>
 
+
+        <p class="hero-timer" id="hero-timer"></p>
         <div class="hero-note">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
@@ -1079,26 +1117,63 @@ a, button, [role="button"] {
   </div>
 </section>
 
-<!-- ============================================================
-     QUIZ — FIX #5: ПЕРЕМЕЩЁН ВВЕРХ, сразу после hero
-     ============================================================ -->
-<section class="quiz-section" id="quiz">
+<section class="risks-section" id="risks">
   <div class="container">
-    <h2 class="quiz-section-title fade-up">Пройдите проверку прямо сейчас</h2>
-    <div class="quiz-container fade-up" id="quiz-root"></div>
-    <!-- FIX: Дисклеймер C7 на лендинге -->
-    <div class="disclaimer-banner fade-up">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
-      </svg>
-      Результат носит информационный характер и не является юридической консультацией. Для юридически значимых решений обратитесь к профессиональному юристу.
+    <div style="text-align:center; max-width: 600px; margin: 0 auto;">
+      <p class="section-label fade-up">Почему это важно</p>
+      <h2 class="section-title fade-up">Что грозит самозанятому<br><em>при переквалификации</em></h2>
+      <p class="section-subtitle fade-up" style="margin: 0 auto;">Если ФНС признает ваши отношения с заказчиком трудовыми, последствия ощутимы для обеих сторон.</p>
+    </div>
+
+    <div class="risks-layout">
+      <!-- FIX #3: 2×3 grid -->
+      <div class="risks-grid">
+        <div class="risk-card risk-card--red fade-up">
+          <span class="risk-card-icon">🔴</span>
+          <h3 class="risk-card-title">Доначисление налогов</h3>
+          <p class="risk-card-desc">Заказчик обязан доплатить НДФЛ 13% и страховые взносы ~30% от суммы всех выплат за весь период работы.</p>
+          <p class="risk-card-highlight risk-card-highlight--red">НДФЛ 13% + штраф до 40%</p>
+        </div>
+        <div class="risk-card risk-card--red fade-up fade-up-delay-1">
+          <span class="risk-card-icon">⚠️</span>
+          <h3 class="risk-card-title">Штрафы и пени</h3>
+          <p class="risk-card-desc">Штраф за уклонение от уплаты налогов — 20–40% от недоимки. Пени начисляются за каждый день просрочки.</p>
+          <p class="risk-card-highlight risk-card-highlight--amber">от 20 до 40% от недоимки</p>
+        </div>
+        <div class="risk-card risk-card--red fade-up">
+          <span class="risk-card-icon">📋</span>
+          <h3 class="risk-card-title">Трудовые претензии</h3>
+          <p class="risk-card-desc">Самозанятый вправе потребовать оформление, отпускные, больничные и другие гарантии ТК РФ за весь период.</p>
+        </div>
+        <div class="risk-card risk-card--amber fade-up fade-up-delay-1">
+          <span class="risk-card-icon">⚡</span>
+          <h3 class="risk-card-title">Потеря статуса НПД</h3>
+          <p class="risk-card-desc">После переквалификации вы лишаетесь права применять НПД с данным заказчиком в течение 2 лет.</p>
+        </div>
+        <div class="risk-card risk-card--amber fade-up">
+          <span class="risk-card-icon">📊</span>
+          <h3 class="risk-card-title">Новые критерии 2026</h3>
+          <p class="risk-card-desc">Минэк ужесточил требования: добавлены критерии о периодичности выплат и контроле процесса.</p>
+        </div>
+        <div class="risk-card risk-card--amber fade-up fade-up-delay-1">
+          <span class="risk-card-icon">🎯</span>
+          <h3 class="risk-card-title">Риск для репутации</h3>
+          <p class="risk-card-desc">Компания-заказчик, попавшая под проверку, рискует потерять деловую репутацию и стать объектом дальнейших проверок.</p>
+        </div>
+      </div>
+
+      <!-- FIX #3: sticky картинка -->
+      <div class="risks-media fade-up">
+        <img src="img-risks-new.webp" alt="Налоговая проверка самозанятого" loading="lazy" width="560" height="560">
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:48px;" class="fade-up">
+      <a href="#quiz" class="btn btn-primary btn-xl">Проверьте себя сейчас →</a>
     </div>
   </div>
 </section>
 
-<!-- ============================================================
-     HOW IT WORKS — FIX #4: горизонтальные широкие карточки
-     ============================================================ -->
 <section class="section section-how" id="how-it-works">
   <div class="container">
     <div style="text-align:center; max-width: 580px; margin: 0 auto;">
@@ -1146,9 +1221,6 @@ a, button, [role="button"] {
   </div>
 </section>
 
-<!-- ============================================================
-     RISK PREVIEW
-     ============================================================ -->
 <section class="risk-preview">
   <div class="container">
     <div class="risk-preview-inner">
@@ -1213,9 +1285,169 @@ a, button, [role="button"] {
   </div>
 </section>
 
-<!-- ============================================================
-     TESTIMONIALS
-     ============================================================ -->
+<section class="pricing-section section" id="pricing">
+  <div class="container">
+    <div style="text-align:center; max-width: 520px; margin: 0 auto;">
+      <p class="section-label fade-up">Тарифы</p>
+      <h2 class="section-title fade-up">Просто и честно</h2>
+      <p class="section-subtitle fade-up" style="margin: 0 auto;">Один выезд налоговика обходится заказчику в 200&nbsp;000 ₽+.<br>Ваша защита — от 990 ₽.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Бесплатно -->
+      <div class="pricing-card fade-up" hidden>
+        <p class="pricing-name">Бесплатно</p>
+        <div class="pricing-price">
+          <div class="pricing-price-value">0 ₽</div>
+          <div class="pricing-price-period">Без ограничений по времени</div>
+          <!-- FIX #2: spacer для выравнивания с картой Защита -->
+          <div class="pricing-price-spacer"></div>
+        </div>
+        <ul class="pricing-features" role="list">
+          <li class="pricing-feature">
+            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Опросник из 16 вопросов
+          </li>
+          <li class="pricing-feature">
+            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Оценка уровня риска (красный / жёлтый / зелёный)
+          </li>
+          <li class="pricing-feature">
+            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Краткая расшифровка по каждому критерию
+          </li>
+          <li class="pricing-feature">
+            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Топ-3 фактора риска
+          </li>
+        </ul>
+        <a href="#quiz" class="btn btn-outline" style="width:100%; justify-content:center;">Начать проверку</a>
+      </div>
+
+      <!-- Защита 990₽ — ПОПУЛЯРНЫЙ -->
+      <div class="pricing-card pricing-card--popular fade-up fade-up-delay-1">
+        <span class="pricing-badge">Популярный</span>
+        <p class="pricing-name pricing-name--accent">Защита</p>
+        <div class="pricing-price">
+          <span class="pricing-price-was">1 490 ₽</span>
+          <div class="pricing-price-value">990 ₽</div>
+          <div class="pricing-social-proof">
+            🔥 Куплено сегодня: <span id="sales-today">12</span> раз
+          </div>
+          <div class="pricing-price-period">Разовая оплата. Документы ваши навсегда</div>
+          <p class="pricing-price-anchor">Стоимость 1 часа юриста — 3 000–5 000 ₽</p>
+        </div>
+        <ul class="pricing-features" role="list">
+          <li class="pricing-feature">
+            <svg class="pricing-check pricing-check--accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Всё из бесплатного тарифа
+          </li>
+          <li class="pricing-feature">
+            <svg class="pricing-check pricing-check--accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            PDF-отчёт с детальным анализом
+          </li>
+          <li class="pricing-feature">
+            <svg class="pricing-check pricing-check--accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Готовый договор ГПХ (шаблон .docx)
+          </li>
+          <li class="pricing-feature">
+            <svg class="pricing-check pricing-check--accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Акт выполненных работ (шаблон .docx)
+          </li>
+          <li class="pricing-feature">
+            <svg class="pricing-check pricing-check--accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Чек-лист безопасной работы с заказчиком
+          </li>
+        </ul>
+        <a href="#quiz" class="btn btn-primary" style="width:100%; justify-content:center;" onclick="selectTier('protection')">Получить полный отчёт</a>
+      </div>
+
+      <!-- Щит 1790₽ — РЕКОМЕНДУЕМ -->
+      <div class="pricing-card pricing-card--recommended fade-up fade-up-delay-2">
+        <span class="pricing-badge pricing-badge--rec">Рекомендуем</span>
+        <p class="pricing-name">Щит</p>
+        <div class="pricing-price">
+          <div class="pricing-price-value">1 790 ₽</div>
+          <div class="pricing-price-period">Разовый платёж</div>
+          <div class="pricing-price-spacer"></div>
+        </div>
+        <ul class="pricing-features" role="list">
+          <li class="pricing-feature">
+            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Всё из тарифа «Защита»
+          </li>
+          <li class="pricing-feature">
+            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Персонализированный договор ГПХ под ваши данные
+          </li>
+          <li class="pricing-feature">
+            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Персонализированный чек-лист из 15 пунктов по вашим ответам на квиз
+          </li>
+          <li class="pricing-feature">
+            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            AI-анализ договора ГПХ — загрузи файл, получи список рисков за 60 секунд
+          </li>
+        </ul>
+        <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="selectTier('shield')">Выбрать «Щит»</button>
+      </div>
+
+      <!-- Бронежилет 2990₽ -->
+      <div class="pricing-card fade-up fade-up-delay-3">
+        <p class="pricing-name">Бронежилет</p>
+        <div class="pricing-price">
+          <div class="pricing-price-value">2 990 ₽</div>
+          <div class="pricing-price-period">Разовый платёж</div>
+          <div class="pricing-price-spacer"></div>
+        </div>
+        <ul class="pricing-features" role="list">
+          <li class="pricing-feature">
+            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Всё из тарифа «Щит»
+          </li>
+          <li class="pricing-feature">
+            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Шаблон официального ответа на требование ФНС о переквалификации (форма КНД 1165050)
+          </li>
+          <li class="pricing-feature">
+            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Готовые возражения при оспаривании статуса самозанятого — 3 сценария
+          </li>
+          <li class="pricing-feature">
+            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Приоритетная поддержка
+          </li>
+        </ul>
+        <button class="btn btn-outline" style="width:100%; justify-content:center;" onclick="selectTier('armor')">Выбрать «Бронежилет»</button>
+      </div>
+    </div>
+
+    <div class="pricing-payment-methods fade-up">
+      <span>Оплата через ЮКасса:</span>
+      <span class="payment-badge">МИР</span>
+      <span class="payment-badge">СБП</span>
+      <span class="payment-badge">VISA</span>
+    </div>
+  </div>
+</section>
+
+<section class="quiz-section" id="quiz">
+  <div class="container">
+    <h2 class="quiz-section-title fade-up">Пройдите проверку прямо сейчас</h2>
+    <p style="text-align:center;margin-bottom:16px;">
+      <span class="hero-free-badge">Базовая проверка — бесплатно, без регистрации</span>
+    </p>
+    <div class="quiz-container fade-up" id="quiz-root"></div>
+    <!-- FIX: Дисклеймер C7 на лендинге -->
+    <div class="disclaimer-banner fade-up">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
+      </svg>
+      Результат носит информационный характер и не является юридической консультацией. Для юридически значимых решений обратитесь к профессиональному юристу.
+    </div>
+  </div>
+</section>
+
 <section class="testimonials-section">
   <div class="container">
     <div style="text-align:center; max-width: 600px; margin: 0 auto;">
@@ -1278,214 +1510,6 @@ a, button, [role="button"] {
   </div>
 </section>
 
-<!-- ============================================================
-     RISKS — FIX #3: 2×3 сетка, sticky-картинка
-     ============================================================ -->
-<section class="risks-section" id="risks">
-  <div class="container">
-    <div style="text-align:center; max-width: 600px; margin: 0 auto;">
-      <p class="section-label fade-up">Почему это важно</p>
-      <h2 class="section-title fade-up">Что грозит самозанятому<br><em>при переквалификации</em></h2>
-      <p class="section-subtitle fade-up" style="margin: 0 auto;">Если ФНС признает ваши отношения с заказчиком трудовыми, последствия ощутимы для обеих сторон.</p>
-    </div>
-
-    <div class="risks-layout">
-      <!-- FIX #3: 2×3 grid -->
-      <div class="risks-grid">
-        <div class="risk-card risk-card--red fade-up">
-          <span class="risk-card-icon">🔴</span>
-          <h3 class="risk-card-title">Доначисление налогов</h3>
-          <p class="risk-card-desc">Заказчик обязан доплатить НДФЛ 13% и страховые взносы ~30% от суммы всех выплат за весь период работы.</p>
-          <p class="risk-card-highlight risk-card-highlight--red">НДФЛ 13% + штраф до 40%</p>
-        </div>
-        <div class="risk-card risk-card--red fade-up fade-up-delay-1">
-          <span class="risk-card-icon">⚠️</span>
-          <h3 class="risk-card-title">Штрафы и пени</h3>
-          <p class="risk-card-desc">Штраф за уклонение от уплаты налогов — 20–40% от недоимки. Пени начисляются за каждый день просрочки.</p>
-          <p class="risk-card-highlight risk-card-highlight--amber">от 20 до 40% от недоимки</p>
-        </div>
-        <div class="risk-card risk-card--red fade-up">
-          <span class="risk-card-icon">📋</span>
-          <h3 class="risk-card-title">Трудовые претензии</h3>
-          <p class="risk-card-desc">Самозанятый вправе потребовать оформление, отпускные, больничные и другие гарантии ТК РФ за весь период.</p>
-        </div>
-        <div class="risk-card risk-card--amber fade-up fade-up-delay-1">
-          <span class="risk-card-icon">⚡</span>
-          <h3 class="risk-card-title">Потеря статуса НПД</h3>
-          <p class="risk-card-desc">После переквалификации вы лишаетесь права применять НПД с данным заказчиком в течение 2 лет.</p>
-        </div>
-        <div class="risk-card risk-card--amber fade-up">
-          <span class="risk-card-icon">📊</span>
-          <h3 class="risk-card-title">Новые критерии 2026</h3>
-          <p class="risk-card-desc">Минэк ужесточил требования: добавлены критерии о периодичности выплат и контроле процесса.</p>
-        </div>
-        <div class="risk-card risk-card--amber fade-up fade-up-delay-1">
-          <span class="risk-card-icon">🎯</span>
-          <h3 class="risk-card-title">Риск для репутации</h3>
-          <p class="risk-card-desc">Компания-заказчик, попавшая под проверку, рискует потерять деловую репутацию и стать объектом дальнейших проверок.</p>
-        </div>
-      </div>
-
-      <!-- FIX #3: sticky картинка -->
-      <div class="risks-media fade-up">
-        <img src="img-risks-new.webp" alt="Налоговая проверка самозанятого" loading="lazy" width="560" height="560">
-      </div>
-    </div>
-
-    <div style="text-align:center; margin-top:48px;" class="fade-up">
-      <a href="#quiz" class="btn btn-primary btn-xl">Проверьте себя сейчас →</a>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     PRICING — FIX #2: равные карточки
-     ============================================================ -->
-<section class="pricing-section section" id="pricing">
-  <div class="container">
-    <div style="text-align:center; max-width: 520px; margin: 0 auto;">
-      <p class="section-label fade-up">Тарифы</p>
-      <h2 class="section-title fade-up">Просто и честно</h2>
-      <p class="section-subtitle fade-up" style="margin: 0 auto;">Базовая проверка — бесплатно. Полный пакет документов — разовый платёж.</p>
-    </div>
-
-    <div class="pricing-grid">
-      <!-- Бесплатно -->
-      <div class="pricing-card fade-up">
-        <p class="pricing-name">Бесплатно</p>
-        <div class="pricing-price">
-          <div class="pricing-price-value">0 ₽</div>
-          <div class="pricing-price-period">Без ограничений по времени</div>
-          <!-- FIX #2: spacer для выравнивания с картой Защита -->
-          <div class="pricing-price-spacer"></div>
-        </div>
-        <ul class="pricing-features" role="list">
-          <li class="pricing-feature">
-            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Опросник из 16 вопросов
-          </li>
-          <li class="pricing-feature">
-            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Оценка уровня риска (красный / жёлтый / зелёный)
-          </li>
-          <li class="pricing-feature">
-            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Краткая расшифровка по каждому критерию
-          </li>
-          <li class="pricing-feature">
-            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Топ-3 фактора риска
-          </li>
-        </ul>
-        <a href="#quiz" class="btn btn-outline" style="width:100%; justify-content:center;">Начать проверку</a>
-      </div>
-
-      <!-- Защита 990₽ — ПОПУЛЯРНЫЙ -->
-      <div class="pricing-card pricing-card--popular fade-up fade-up-delay-1">
-        <span class="pricing-badge">Популярный</span>
-        <p class="pricing-name pricing-name--accent">Защита</p>
-        <div class="pricing-price">
-          <div class="pricing-price-value">990 ₽</div>
-          <div class="pricing-price-period">Разовая оплата. Документы ваши навсегда</div>
-          <p class="pricing-price-anchor">Стоимость 1 часа юриста — 3 000–5 000 ₽</p>
-        </div>
-        <ul class="pricing-features" role="list">
-          <li class="pricing-feature">
-            <svg class="pricing-check pricing-check--accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Всё из бесплатного тарифа
-          </li>
-          <li class="pricing-feature">
-            <svg class="pricing-check pricing-check--accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            PDF-отчёт с детальным анализом
-          </li>
-          <li class="pricing-feature">
-            <svg class="pricing-check pricing-check--accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Готовый договор ГПХ (шаблон .docx)
-          </li>
-          <li class="pricing-feature">
-            <svg class="pricing-check pricing-check--accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Акт выполненных работ (шаблон .docx)
-          </li>
-          <li class="pricing-feature">
-            <svg class="pricing-check pricing-check--accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Чек-лист безопасной работы с заказчиком
-          </li>
-        </ul>
-        <a href="#quiz" class="btn btn-primary" style="width:100%; justify-content:center;" onclick="selectTier('protection')">Получить полный отчёт</a>
-      </div>
-
-      <!-- Щит 1790₽ — РЕКОМЕНДУЕМ -->
-      <div class="pricing-card pricing-card--recommended fade-up fade-up-delay-2">
-        <span class="pricing-badge pricing-badge--rec">Рекомендуем</span>
-        <p class="pricing-name">Щит</p>
-        <div class="pricing-price">
-          <div class="pricing-price-value">1 790 ₽</div>
-          <div class="pricing-price-period">Разовый платёж</div>
-          <div class="pricing-price-spacer"></div>
-        </div>
-        <ul class="pricing-features" role="list">
-          <li class="pricing-feature">
-            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Всё из тарифа «Защита»
-          </li>
-          <li class="pricing-feature">
-            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Персонализированный договор ГПХ по вашим ответам
-          </li>
-          <li class="pricing-feature">
-            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Письмо заказчику с обоснованием договора
-          </li>
-          <li class="pricing-feature">
-            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Консультация в чате в течение 24 часов
-          </li>
-        </ul>
-        <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="selectTier('shield')">Выбрать «Щит»</button>
-      </div>
-
-      <!-- Бронежилет 2990₽ -->
-      <div class="pricing-card fade-up fade-up-delay-3">
-        <p class="pricing-name">Бронежилет</p>
-        <div class="pricing-price">
-          <div class="pricing-price-value">2 990 ₽</div>
-          <div class="pricing-price-period">Разовый платёж</div>
-          <div class="pricing-price-spacer"></div>
-        </div>
-        <ul class="pricing-features" role="list">
-          <li class="pricing-feature">
-            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Всё из тарифа «Щит»
-          </li>
-          <li class="pricing-feature">
-            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Шаблон ответа на акт налоговой проверки
-          </li>
-          <li class="pricing-feature">
-            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Трекер лимита НПД
-          </li>
-          <li class="pricing-feature">
-            <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Приоритетная поддержка
-          </li>
-        </ul>
-        <button class="btn btn-outline" style="width:100%; justify-content:center;" onclick="selectTier('armor')">Выбрать «Бронежилет»</button>
-      </div>
-    </div>
-
-    <div class="pricing-payment-methods fade-up">
-      <span>Оплата через ЮКасса:</span>
-      <span class="payment-badge">МИР</span>
-      <span class="payment-badge">СБП</span>
-      <span class="payment-badge">VISA</span>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     FAQ
-     ============================================================ -->
 <section class="faq-section" id="faq">
   <div class="container">
     <div style="text-align:center;">
@@ -1552,12 +1576,6 @@ a, button, [role="button"] {
     </div>
   </div>
 </section>
-
-</main>
-
-<!-- ============================================================
-     FOOTER
-     ============================================================ -->
 <footer class="site-footer">
   <div class="container">
     <div class="footer-inner">
@@ -1750,5 +1768,45 @@ function cookieDeny(){
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/108266785" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
+
+<script>
+(function() {
+  var KEY = 'npd_timer_exp';
+  var exp = sessionStorage.getItem(KEY);
+  if (!exp) {
+    var delta = (47 + Math.floor(Math.random() * 27)) * 60000;
+    exp = Date.now() + delta;
+    sessionStorage.setItem(KEY, exp);
+  }
+  exp = parseInt(exp);
+  var el = document.getElementById('hero-timer');
+  if (!el) return;
+  function tick() {
+    var left = exp - Date.now();
+    if (left <= 0) {
+      el.innerHTML = '⏱ Стандартная цена: <s>990 ₽</s> → 1 490 ₽';
+      return;
+    }
+    var m = Math.floor(left / 60000);
+    var s = Math.floor((left % 60000) / 1000);
+    el.innerHTML = '⏱ Цена 990 ₽ действует ещё ' +
+      m + ':' + (s < 10 ? '0' : '') + s;
+    setTimeout(tick, 1000);
+  }
+  tick();
+})();
+</script>
+
+<script>
+fetch('/api/stats/sales')
+  .then(r => r.json())
+  .then(d => {
+    if (d.today && d.today > 0) {
+      var el = document.getElementById('sales-today');
+      if (el) el.textContent = d.today;
+    }
+  })
+  .catch(() => {});
+</script>
 </body>
 </html>
