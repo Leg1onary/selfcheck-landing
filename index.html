@@ -970,6 +970,14 @@ a, button, [role="button"] {
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+
+/* ── БАГ 7: Глобальная защита от горизонтального скролла ── */
+.section, .hero, .site-header {
+  max-width: 100vw;
+  overflow-x: clip;
+}
+
+/* ── Desktop / широкий планшет (до 960px) ── */
 @media (max-width: 960px) {
   .hero-layout { grid-template-columns: 1fr; }
   .hero-image-wrap { display: none; }
@@ -977,18 +985,96 @@ a, button, [role="button"] {
   .hero-stat { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
   .hero-stat:nth-child(2n) { border-right: none; }
   .hero-stat:nth-last-child(-n+2) { border-bottom: none; }
-  .risk-preview-inner { grid-template-columns: 1fr; }
-  .testimonials-grid { grid-template-columns: 1fr; }
+  /* БАГ 4: риски */
   .risks-layout { grid-template-columns: 1fr; }
-  .risks-media { display: none; }
+  .risks-media { position: static; display: none; }
+  /* БАГ 8: risk preview */
+  .risk-preview-inner { grid-template-columns: 1fr; }
+  .risk-demo-wrap { display: none; }
+  /* БАГ 5: тарифы — 2 колонки */
+  .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+  /* БАГ 6: отзывы — 2 колонки на планшете */
+  .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── БАГ 5: тарифы — брейкпоинт 899px ── */
+@media (max-width: 899px) {
   .pricing-grid { grid-template-columns: repeat(2, 1fr); }
 }
-@media (max-width: 640px) {
-  .hero-stats { grid-template-columns: repeat(2, 1fr); }
-  .pricing-grid { grid-template-columns: 1fr; }
-  .risks-grid { grid-template-columns: 1fr; }
+
+/* ── БАГ 3: шаги — 1 колонка, стрелка → rotate(90deg) ── */
+@media (max-width: 768px) {
   .steps-grid-horizontal { grid-template-columns: 1fr; }
+  .step-arrow-wrap {
+    transform: rotate(90deg);
+    padding: 0;
+    height: 32px;
+  }
+}
+
+/* ── Мобильный (< 767px) ── */
+@media (max-width: 767px) {
+  /* БАГ 2: Hero title и CTA */
+  .hero-title { font-size: clamp(2rem, 8vw, 2.8rem); }
+  .hero-cta-group { flex-direction: column; align-items: stretch; }
+  .hero-cta-group .btn { width: 100%; justify-content: center; }
+
+  /* БАГ 4: риски */
+  .risks-layout { grid-template-columns: 1fr; }
+  .risks-media { position: static; display: none; }
+  .risks-grid { grid-template-columns: 1fr; }
+
+  /* БАГ 6: отзывы — 1 колонка по умолчанию */
+  .testimonials-grid { grid-template-columns: 1fr; }
+
+  /* БАГ 8: risk preview */
+  .risk-preview-inner { grid-template-columns: 1fr; }
+  .risk-demo-wrap { display: none; }
+
+  /* Touch targets (Apple HIG 44px) */
+  .btn { min-height: 44px; }
+  .quiz-back, .quiz-restart { min-height: 36px; }
+}
+
+/* БАГ 6: отзывы — 2 колонки на широком мобиле */
+@media (min-width: 480px) and (max-width: 767px) {
+  .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── БАГ 1: Шапка на мобиле (наивысший приоритет) ── */
+@media (max-width: 639px) {
+  /* Скрыть нав-ссылки «Как работает» и «Тарифы» */
+  .site-header nav .btn-ghost { display: none; }
+  /* Уменьшить высоту и паддинг шапки */
+  .header-inner { height: 56px; padding: 0 16px; }
+  /* CTA-кнопка — компактная (важно: перекрывает inline-стиль) */
+  .header-actions .btn-primary {
+    font-size: 0.8125rem !important;
+    padding: 8px 16px !important;
+  }
+}
+
+/* ── БАГ 5: тарифы + БАГ 2: stats + БАГ 3: шаги (узкий мобил) ── */
+@media (max-width: 640px) {
+  /* БАГ 2: hero stats border */
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .hero-stat:nth-child(2) { border-right: none; }
+  .hero-stat:nth-child(3) { border-top: 1px solid var(--border); }
+  .hero-stat:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
+  /* БАГ 5: тарифы — 1 колонка */
+  .pricing-grid { grid-template-columns: 1fr; }
+  /* Популярный тариф показывать первым */
+  .pricing-card--popular { order: -1; }
+  /* БАГ 3: шаги — стрелки скрыть (< 640px) */
   .step-arrow-wrap { display: none; }
+  /* БАГ 4: риски-сетка — 1 колонка */
+  .risks-grid { grid-template-columns: 1fr; }
+}
+
+/* ── БАГ 5: тарифы — 1 колонка на узких экранах ── */
+@media (max-width: 479px) {
+  .pricing-grid { grid-template-columns: 1fr; }
+  .pricing-card--popular { order: -1; }
 }
 </style>
 <link rel="stylesheet" href="quiz-result.css">
