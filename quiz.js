@@ -159,9 +159,9 @@
         ${lockedBanner}
         <div class="result-factors-list">
           ${r.factors.map(f => {
-        const fc = {green: '#16A34A', yellow: '#D97706', red: '#DC2626'}[f.risk_level];
-        const fi = {green: '✓', yellow: '!', red: '✕'}[f.risk_level];
-        return `<div class="factor-item factor-${f.risk_level}">
+      const fc = {green: '#16A34A', yellow: '#D97706', red: '#DC2626'}[f.risk_level];
+      const fi = {green: '✓', yellow: '!', red: '✕'}[f.risk_level];
+      return `<div class="factor-item factor-${f.risk_level}">
               <div class="factor-icon" style="color:${fc};">${fi}</div>
               <div class="factor-body">
                 <div class="factor-question">${f.question_text}</div>
@@ -211,8 +211,8 @@
           </p>
           <p class="result-offer-note">
             Нажимая кнопку, вы принимаете
-            <a href="../offer.html" target="_blank">условия оферты</a>
-            и <a href="../privacy.html" target="_blank">политику конфиденциальности</a>
+            <a href="offer.html" target="_blank">условия оферты</a>
+            и <a href="privacy.html" target="_blank">политику конфиденциальности</a>
           </p>
           <p class="result-cta-hint" id="cta-hint"></p>
         </div>
