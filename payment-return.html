@@ -67,7 +67,7 @@
   </div>
   <h1>Проверяем статус оплаты…</h1>
   <p class="subtitle">Это займёт несколько секунд.<br>Не закрывайте страницу.</p>
-  <p class="hint" id="hint">Ожидаем подтверждение от банка — это может занять до 20 секунд.</p>
+  <p class="hint" id="hint">Ожидаем подтверждение от банка — это может занять до 60 секунд.</p>
 </div>
 <script>
 (function () {
@@ -81,7 +81,7 @@
   }
 
   var attempts = 0;
-  var maxAttempts = 8;   // 8 × 3s = 24s — достаточно для webhook ЮКассы
+  var maxAttempts = 20;   // 8 × 3s = 24s — достаточно для webhook ЮКассы
   var hintShown = false;
 
   function checkStatus() {
