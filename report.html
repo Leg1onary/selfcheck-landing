@@ -1829,7 +1829,7 @@ async function loadReport() {
     // Скрываем карточку тарифа, который уже куплен
     if (data.tier === 'shield') {
       const shieldBtn = document.getElementById('upgrade-shield-btn');
-      if (shieldBtn) shieldBtn.closest('div').style.display = 'none';
+      if (shieldBtn) shieldBtn.parentElement.style.display = 'none';
     }
     container.style.display = 'block';
     document.getElementById('skeleton').style.display = 'none';
