@@ -87,14 +87,9 @@
   function renderEmailCapture() {
     return `
     <div class="quiz-wrap quiz-email-capture">
-      <div class="quiz-ec-icon">📊</div>
-      <h3 class="quiz-ec-title">Первые результаты уже получены</h3>
-      <p class="quiz-ec-desc">
-        На основе ваших ответов мы уже выявили
-        несколько факторов риска.<br>
-        Введите email — сохраним результат,
-        даже если закроете страницу.
-      </p>
+      <div class="quiz-ec-icon">⚠️</div>
+      <h3 class="quiz-ec-title">Уже видны зоны риска</h3>
+      <p class="quiz-ec-desc">Осталось 9 вопросов — после покажем точный балл<br>и конкретные признаки трудовых отношений в вашей ситуации.<br>Введите email, чтобы результат сохранился.</p>
       <div class="quiz-ec-form">
         <input type="email" id="ec-email" class="result-cta-email"
           placeholder="email@example.com" autocomplete="email">
@@ -110,6 +105,15 @@
 
   function renderLoading() {
     return `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы<br>по критериям ФНС и Минэк 2026…</p></div>`;
+  }
+
+  function getPaywalledSummary(r) {
+    const full = r.summary || '';
+    if (r.overall_risk === 'green') return full;
+    if (full.length <= 120) return full;
+    const dotIdx = full.indexOf('.', 70);
+    const end = (dotIdx > 0 && dotIdx < 200) ? dotIdx + 1 : 120;
+    return full.slice(0, end) + ' Детальный разбор всех факторов — в отчёте.';
   }
 
   function renderResult() {
@@ -152,7 +156,7 @@
           <div class="result-gauge-labels"><span>Безопасно</span><span>Средний</span><span>Критично</span></div>
         </div>
       </div>
-      <p class="result-summary">${r.summary}</p>
+      <p class="result-summary">${getPaywalledSummary(r)}</p>
       ${emailSavedHtml}
       <div class="result-factors">
         <h4 class="result-section-title">Факторы риска по вашим ответам</h4>
@@ -172,54 +176,7 @@
     }).join('')}
         </div>
       </div>
-
-      <div class="result-cta-block">
-        <div class="result-cta-card">
-          <div class="result-cta-icon">📋</div>
-          <div class="result-cta-text">
-            <strong>Полный отчёт + защитные документы</strong>
-            <span>Персональный анализ, рекомендации и готовые документы</span>
-          </div>
-          <div class="tier-tabs" id="tier-tabs">
-            <button class="tier-tab active" data-tier="protection" data-price="990">
-              <span class="tier-tab-name">Стандарт</span>
-              <span class="tier-tab-price">990 ₽</span>
-              <span class="tier-tab-desc">PDF + шаблоны</span>
-            </button>
-            <button class="tier-tab" data-tier="shield" data-price="1790">
-              <span class="tier-tab-name">Щит ✦</span>
-              <span class="tier-tab-price">1 790 ₽</span>
-              <span class="tier-tab-desc">+ персональный договор</span>
-            </button>
-            <button class="tier-tab" data-tier="armor" data-price="2990">
-              <span class="tier-tab-name">Броня</span>
-              <span class="tier-tab-price">2 990 ₽</span>
-              <span class="tier-tab-desc">+ возражение в ФНС</span>
-            </button>
-          </div>
-          <ul class="tier-features" id="tier-features"></ul>
-          <div class="result-cta-form" id="cta-form">
-            <input type="email" id="cta-email" class="result-cta-email" placeholder="Ваш email для получения отчёта" autocomplete="email"${window.quizEmail ? ` value="${window.quizEmail}"` : ''}>
-            <button class="btn btn-buy" data-action="get-report" id="cta-pay-btn">
-              🛡 Защититься — <span id="cta-price-label">990</span> ₽
-            </button>
-          </div>
-          <p class="result-micro-guarantee">
-            ✓ Мгновенная выдача&nbsp;&nbsp;
-            ✓ Файлы навсегда&nbsp;&nbsp;
-            ✓ Возврат если не помогло
-          </p>
-          <p class="result-offer-note">
-            Нажимая кнопку, вы принимаете
-            <a href="offer.html" target="_blank">условия оферты</a>
-            и <a href="privacy.html" target="_blank">политику конфиденциальности</a>
-          </p>
-          <p class="result-cta-hint" id="cta-hint"></p>
-        </div>
-        <button class="quiz-restart" data-action="restart">← Пройти заново</button>
-      </div>
-
-      <div class="result-calc">
+	  	<div class="result-calc">
         <h4 class="result-calc-title">
           ⚠️ Ваши потенциальные потери
         </h4>
@@ -267,6 +224,51 @@
           ">
           🛡 Защититься за 990 ₽ →
         </button>
+      </div>
+      <div class="result-cta-block">
+        <div class="result-cta-card">
+          <div class="result-cta-icon">📋</div>
+          <div class="result-cta-text">
+            <strong>Полный отчёт + защитные документы</strong>
+            <span>Персональный анализ, рекомендации и готовые документы</span>
+          </div>
+          <div class="tier-tabs" id="tier-tabs">
+            <button class="tier-tab active" data-tier="protection" data-price="990">
+              <span class="tier-tab-name">Стандарт</span>
+              <span class="tier-tab-price">990 ₽</span>
+              <span class="tier-tab-desc">PDF + шаблоны</span>
+            </button>
+            <button class="tier-tab" data-tier="shield" data-price="1790">
+              <span class="tier-tab-name">Щит ✦</span>
+              <span class="tier-tab-price">1 790 ₽</span>
+              <span class="tier-tab-desc">+ персональный договор</span>
+            </button>
+            <button class="tier-tab" data-tier="armor" data-price="2990">
+              <span class="tier-tab-name">Броня</span>
+              <span class="tier-tab-price">2 990 ₽</span>
+              <span class="tier-tab-desc">+ возражение в ФНС</span>
+            </button>
+          </div>
+          <ul class="tier-features" id="tier-features"></ul>
+          <div class="result-cta-form" id="cta-form">
+            <input type="email" id="cta-email" class="result-cta-email" placeholder="Ваш email для получения отчёта" autocomplete="email"${window.quizEmail ? ` value="${window.quizEmail}"` : ''}>
+            <button class="btn btn-buy" data-action="get-report" id="cta-pay-btn">
+              🛡 Защититься — <span id="cta-price-label">990</span> ₽
+            </button>
+          </div>
+          <p class="result-micro-guarantee">
+            ✓ Мгновенная выдача&nbsp;&nbsp;
+            ✓ Файлы навсегда&nbsp;&nbsp;
+            ✓ Возврат если не помогло
+          </p>
+          <p class="result-offer-note">
+            Нажимая кнопку, вы принимаете
+            <a href="offer.html" target="_blank">условия оферты</a>
+            и <a href="privacy.html" target="_blank">политику конфиденциальности</a>
+          </p>
+          <p class="result-cta-hint" id="cta-hint"></p>
+        </div>
+        <button class="quiz-restart" data-action="restart">← Пройти заново</button>
       </div>
 
       <p class="result-disclaimer">Результат носит информационный характер и не является юридической консультацией.</p>
@@ -351,9 +353,17 @@
   function attachHandlers() {
     if (!quizEl) return;
 
-    const ecSubmit = quizEl.querySelector('[data-action="ec-submit"]');
-    if (ecSubmit) {
-      ecSubmit.addEventListener('click', async () => {
+    const ecEmailInput = quizEl.querySelector('#ec-email');
+		if (ecEmailInput) {
+			ecEmailInput.addEventListener('keydown', (e) => {
+				if (e.key === 'Enter') {
+				e.preventDefault();
+				quizEl.querySelector('[data-action="ec-submit"]')?.click();
+				}
+			});
+		}
+		const ecSubmit = quizEl.querySelector('[data-action="ec-submit"]');
+		if (ecSubmit) ecSubmit.addEventListener('click', async () => {
         const email = quizEl.querySelector('#ec-email')?.value.trim();
         state._emailShown = true;
         if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
